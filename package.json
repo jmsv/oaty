@@ -1,0 +1,26 @@
+{
+  "name": "oaty",
+  "version": "0.0.0",
+  "description": "Object Array Transposer(y) - JS objects with multiple keys",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmsv/oaty.git"
+  },
+  "keywords": [
+    "oaty",
+    "object",
+    "array",
+    "transposer",
+    "keys"
+  ],
+  "author": "James Vickery",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jmsv/oaty/issues"
+  },
+  "homepage": "https://github.com/jmsv/oaty#readme"
+}
