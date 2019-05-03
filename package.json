@@ -2,9 +2,12 @@
   "name": "oaty",
   "version": "0.0.0",
   "description": "Object Array Transposer(y) - JS objects with multiple keys",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "npm run build && mocha --reporter spec",
+    "format": "tslint --project . --fix"
   },
   "repository": {
     "type": "git",
@@ -17,10 +20,16 @@
     "transposer",
     "keys"
   ],
-  "author": "James Vickery",
+  "author": "James Vickery <dev@jamesvickery.net>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jmsv/oaty/issues"
   },
-  "homepage": "https://github.com/jmsv/oaty#readme"
+  "homepage": "https://github.com/jmsv/oaty#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  }
 }
