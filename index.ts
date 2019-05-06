@@ -1,32 +1,36 @@
 export default class OatyObject {
-  private original: object[]
-  private keys: string[]
+  private _original: object[]
+  private _keys: string[]
 
-  private transformed: object = {}
+  private _transposed: object = {}
+
+  get length(): number {
+    return this._original.length
+  }
 
   constructor(input: object[], keys: string[]) {
-    this.original = input
-    this.keys = keys
+    this._original = input.map(x => Object.assign({}, x))
+    this._keys = keys
 
-    this.transformed = keys.reduce((acc, newKey) => {
-      acc[newKey] = transform(input, newKey)
-      return acc
-    }, {})
+    this._transposed = transpose(this._keys, this._original)
   }
 
   public get(keyName: string, keyValue: string): object {
-    return this.transformed[keyName][keyValue]
+    return this._transposed[keyName][keyValue]
+  }
+
+  public push(...items: object[]): number {
+    this._transposed = transpose(this._keys, items, this._transposed)
+    return this._original.push(...items)
   }
 }
 
-const transform = (array: object[], targetKey: string): object => {
-  return array.reduce((acc, item) => {
-    if (acc[item[targetKey]]) {
-      acc[item[targetKey]].push(item)
-    } else {
-      acc[item[targetKey]] = [item]
-    }
-
+const transpose = (keys: string[], items: object[], current?: object) => {
+  return keys.reduce((acc, key) => {
+    acc[key] = items.reduce((acc, item) => {
+      acc[item[key]] ? acc[item[key]].push(item) : acc[item[key]] = [item]
+      return acc
+    }, current || {})
     return acc
   }, {})
 }
