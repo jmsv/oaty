@@ -1,7 +1,6 @@
 export default class OatyObject {
   private _original: object[]
   private _keys: string[]
-
   private _transposed: object = {}
 
   get length(): number {
@@ -9,7 +8,7 @@ export default class OatyObject {
   }
 
   constructor(input: object[], keys: string[]) {
-    this._original = input.map(x => Object.assign({}, x))
+    this._original = input.map((x) => Object.assign({}, x))
     this._keys = keys
 
     this._transposed = transpose(this._keys, this._original)
@@ -26,11 +25,11 @@ export default class OatyObject {
 }
 
 const transpose = (keys: string[], items: object[], current?: object) => {
-  return keys.reduce((acc, key) => {
-    acc[key] = items.reduce((acc, item) => {
+  return keys.reduce((transposed, key) => {
+    transposed[key] = items.reduce((acc, item) => {
       acc[item[key]] ? acc[item[key]].push(item) : acc[item[key]] = [item]
       return acc
     }, current || {})
-    return acc
+    return transposed
   }, {})
 }

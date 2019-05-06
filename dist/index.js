@@ -30,11 +30,11 @@ var OatyObject = /** @class */ (function () {
 }());
 exports.default = OatyObject;
 var transpose = function (keys, items, current) {
-    return keys.reduce(function (acc, key) {
-        acc[key] = items.reduce(function (acc, item) {
+    return keys.reduce(function (transposed, key) {
+        transposed[key] = items.reduce(function (acc, item) {
             acc[item[key]] ? acc[item[key]].push(item) : acc[item[key]] = [item];
             return acc;
         }, current || {});
-        return acc;
+        return transposed;
     }, {});
 };

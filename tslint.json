@@ -3,6 +3,7 @@
   "rules": {
     "quotemark": [true, "single"],
     "semicolon": [true, "never"],
-    "max-line-length": { "options": [120] }
+    "max-line-length": { "options": [120] },
+    "variable-name": [true, "allow-leading-underscore"]
   }
 }
