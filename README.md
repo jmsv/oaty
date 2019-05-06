@@ -3,6 +3,7 @@
 Object Array Transposer(y) - JS objects with multiple key/value structures
 
 [![NPM Version](https://img.shields.io/npm/v/oaty.svg)](https://npmjs.org/package/oaty)
+[![Build Status](https://travis-ci.org/jmsv/oaty.svg?branch=master)](https://travis-ci.org/jmsv/oaty)
 
 ## Why?
 
