@@ -30,4 +30,30 @@ describe('OatyObject', () => {
     expect(matches[0]).to.not.be.undefined
     expect(matches[0].b).to.equal(3)
   })
+
+  it('should let the user query pushed objects', () => {
+    const oat = new OatyObject(testArray, ['fruit'])
+
+    oat.push(
+      { a: 5, b: 5, fruit: 'potato' },
+      { a: 6, b: 6, fruit: 'courgette' }
+    )
+
+    const matches = oat.get('fruit', 'potato')
+
+    expect(matches).to.not.be.undefined
+    expect(matches[0]).to.not.be.undefined
+    expect(matches[0].b).to.equal(5)
+  })
+
+  it('push function should return count', () => {
+    const oat = new OatyObject(testArray, ['fruit'])
+
+    const newCount = oat.push(
+      { a: 5, b: 5, fruit: 'potato' },
+      { a: 6, b: 6, fruit: 'courgette' }
+    )
+
+    expect(newCount).to.equal(testArray.length + 2)
+  })
 })
