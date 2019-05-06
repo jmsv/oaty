@@ -7,7 +7,11 @@
   "scripts": {
     "build": "tsc",
     "test": "npm run build && mocha --reporter spec",
-    "format": "tslint --project . --fix"
+    "format": "tslint --project . --fix",
+    "ci": "npm test",
+    "postversion": "git push && git push --tags",
+    "prepublishOnly": "npm run ci",
+    "preversion": "npm run ci"
   },
   "repository": {
     "type": "git",
