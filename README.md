@@ -124,7 +124,15 @@ To get started, run `npm install` to install dependencies.
 
 Feel free to open Issues/PRs with suggestions/problems/improvements.
 
-### Maintainers:
+### Maintainers
 
 - James Vickery - [jmsv](https://github.com/jmsv)
 - Jonathan Marsh - [j-m](https://github.com/j-m)
+
+### Changelog
+
+#### `0.1.0`
+- Added `.push` function
+
+#### `0.0.0`
+- Initial proof of concept
