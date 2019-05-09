@@ -93,15 +93,15 @@ However, for data that is assigned once (e.g. when a server first starts running
 
 ## Getting Started
 
-This library's default export is `OatyObject`. Initialise it as such:
+This library's default export is `OatyArray`. Initialise it as such:
 
 ```javascript
-const oatyFood = new OatyObject(food, ['id', 'type'])
+const oatyFood = new OatyArray(food, ['id', 'type'])
 ```
 
 In the above case, `food` is the initial array of items and `['id', 'type']` is the array of keys you want to be able to query.
 
-The `OatyObject` contstructor generates the transposed caches.
+The `OatyArray` contstructor generates the transposed caches.
 
 To query data, use the `get` method:
 
@@ -131,8 +131,15 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 
 ### Changelog
 
+#### `0.2.0`
+
+- Renamed `OatyObject` to `OatyArray`, since it's intended as an array alternative, rather than an object alternative
+- Named export, rather than default export
+
 #### `0.1.0`
+
 - Added `.push` function
 
 #### `0.0.0`
+
 - Initial proof of concept
