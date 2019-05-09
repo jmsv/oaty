@@ -1,4 +1,4 @@
-export default class OatyObject {
+export declare class OatyArray {
     private _original;
     private _keys;
     private _transposed;

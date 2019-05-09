@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const OatyObject = require('../dist/index.js').default
+const { OatyArray } = require('../dist/index.js')
 
 const testArray = [{
   a: 1,
@@ -15,15 +15,15 @@ const testArray = [{
   fruit: 'banana'
 }]
 
-describe('OatyObject', () => {
+describe('OatyArray', () => {
   it('should initialise', () => {
-    const oat = new OatyObject(testArray, ['a', 'b', 'fruit'])
+    const oat = new OatyArray(testArray, ['a', 'b', 'fruit'])
 
     expect(oat).to.exist
   })
 
   it('should match a search', () => {
-    const oat = new OatyObject(testArray, ['fruit'])
+    const oat = new OatyArray(testArray, ['fruit'])
     const matches = oat.get('fruit', 'banana')
 
     expect(matches).to.not.be.undefined
@@ -32,7 +32,7 @@ describe('OatyObject', () => {
   })
 
   it('should let the user query pushed objects', () => {
-    const oat = new OatyObject(testArray, ['fruit'])
+    const oat = new OatyArray(testArray, ['fruit'])
 
     oat.push(
       { a: 5, b: 5, fruit: 'potato' },
@@ -47,7 +47,7 @@ describe('OatyObject', () => {
   })
 
   it('push function should return count', () => {
-    const oat = new OatyObject(testArray, ['fruit'])
+    const oat = new OatyArray(testArray, ['fruit'])
 
     const newCount = oat.push(
       { a: 5, b: 5, fruit: 'potato' },
