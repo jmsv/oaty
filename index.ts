@@ -1,4 +1,4 @@
-export default class OatyObject {
+export class OatyArray {
   private _original: object[]
   private _keys: string[]
   private _transposed: object = {}
