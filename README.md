@@ -131,6 +131,10 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 
 ### Changelog
 
+#### `0.2.1`
+
+- Fixed `.get()` method type (`object[]`)
+
 #### `0.2.0`
 
 - Renamed `OatyObject` to `OatyArray`, since it's intended as an array alternative, rather than an object alternative
