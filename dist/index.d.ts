@@ -4,6 +4,6 @@ export declare class OatyArray {
     private _transposed;
     readonly length: number;
     constructor(input: object[], keys: string[]);
-    get(keyName: string, keyValue: string): object;
+    get(keyName: string, keyValue: string): object[];
     push(...items: object[]): number;
 }

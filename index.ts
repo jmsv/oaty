@@ -14,7 +14,7 @@ export class OatyArray {
     this._transposed = transpose(this._keys, this._original)
   }
 
-  public get(keyName: string, keyValue: string): object {
+  public get(keyName: string, keyValue: string): object[] {
     return this._transposed[keyName][keyValue]
   }
 
