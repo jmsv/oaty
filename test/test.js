@@ -56,4 +56,12 @@ describe('OatyArray', () => {
 
     expect(newCount).to.equal(testArray.length + 2)
   })
+
+  it('lets you pop an object', () => {
+    const oat = new OatyArray(testArray, ['fruit'])
+
+    const popped = oat.pop()
+
+    expect(popped).to.not.be.undefined
+  })
 })

@@ -22,6 +22,18 @@ export class OatyArray {
     this._transposed = transpose(this._keys, items, this._transposed)
     return this._original.push(...items)
   }
+
+  public pop(): object | undefined {
+    const popped = this._original.pop()
+
+    this._keys.forEach((key) => {
+      if (this._transposed[key]) {
+        this._transposed[key].remove() // TODO: remove from transposed
+      }
+    })
+
+    return popped
+  }
 }
 
 const transpose = (keys: string[], items: object[], current?: object) => {
