@@ -1,9 +1,13 @@
-# oaty
-
-Object Array Transposer(y) - JS objects with multiple key/value structures
-
-[![NPM Version](https://img.shields.io/npm/v/oaty.svg)](https://npmjs.org/package/oaty)
-[![Build Status](https://travis-ci.org/jmsv/oaty.svg?branch=master)](https://travis-ci.org/jmsv/oaty)
+<p align="center">
+  <img width=320 src="https://repository-images.githubusercontent.com/184661355/24a79180-7409-11e9-8155-1e30fa6df50a" alt="oaty" />
+</p>
+<p align="center">
+  Object Array Transposer(y) - JS objects with multiple key/value structures
+</p>
+<p align="center">
+  <a href="https://npmjs.org/package/oaty"><img src="https://img.shields.io/npm/v/oaty.svg" alt="NPM Version"></a>
+  <a href="https://travis-ci.org/jmsv/oaty"><img src="https://travis-ci.org/jmsv/oaty.svg?branch=master" alt="Build Status"></a>
+</p>
 
 ## Why?
 
