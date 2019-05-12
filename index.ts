@@ -1,35 +1,65 @@
 export class OatyArray {
-  private _original: object[]
-  private _keys: string[]
-  private _transposed: object = {}
+  private keys: string[] | undefined;
+  private original: object[] = [];
+  private transposed: { [key: string]: any } = {};
+
+  constructor(options?: { data?: object[], keys?: string[] }) {
+    if (options !== undefined) {
+      if (options.data !== undefined) { this.push(...options.data); }
+      if (options.keys != undefined) { this.keys = options.keys; }
+    }
+  }
 
   get length(): number {
-    return this._original.length
+    return this.original.length;
   }
 
-  constructor(input: object[], keys: string[]) {
-    this._original = input.map((x) => Object.assign({}, x))
-    this._keys = keys
-
-    this._transposed = transpose(this._keys, this._original)
+  public getKeys(): string[] | undefined {
+    return this.keys;
   }
 
-  public get(keyName: string, keyValue: string): object[] {
-    return this._transposed[keyName][keyValue]
+  public getOriginal(): object[] {
+    return this.original;
   }
 
-  public push(...items: object[]): number {
-    this._transposed = transpose(this._keys, items, this._transposed)
-    return this._original.push(...items)
+  public getTransposed(): object[] {
+    return this.original;
   }
-}
 
-const transpose = (keys: string[], items: object[], current?: object) => {
-  return keys.reduce((transposed, key) => {
-    transposed[key] = items.reduce((acc, item) => {
-      acc[item[key]] ? acc[item[key]].push(item) : acc[item[key]] = [item]
-      return acc
-    }, current || {})
-    return transposed
-  }, {})
+  public get(keyName: string, keyValue: string): object[] | undefined{
+    if (this.transposed === undefined 
+     || this.transposed[keyName] === undefined) {
+      return undefined;
+    }
+    return this.transposed[keyName][keyValue];
+  }
+
+  public push(...data: object[]) {
+    data.forEach(datum => {
+      var clone = Object.assign({}, datum);
+      this.original.push(clone);
+      this.transpose(clone);
+    });
+    return this.length;
+  }
+
+  private getKeysForObject(datum: object): string[] {
+    return this.keys !== undefined ? this.keys : Object.keys(datum);
+  }
+
+  private transpose(datum: { [key: string]: any }) {
+    this.getKeysForObject(datum).forEach(key => {
+      if (datum[key] === undefined) { 
+        return; 
+      }
+      if (this.transposed[key] === undefined) {
+        this.transposed[key] = {};
+      } 
+      if (this.transposed[key][datum[key]] === undefined) {
+        this.transposed[key][datum[key]] = [datum];
+      } else {
+        this.transposed[key][datum[key]].push(datum);
+      }
+    });
+  }
 }

@@ -18,13 +18,22 @@
     "url": "git+https://github.com/jmsv/oaty.git"
   },
   "keywords": [
+    "array",
+    "keys",
     "oaty",
     "object",
-    "array",
-    "transposer",
-    "keys"
+    "objects",
+    "transpose",
+    "transposer"
   ],
   "author": "James Vickery <dev@jamesvickery.net>",
+  "contributors": [
+    {
+      "name": "Jonathan Marsh",
+      "email": "hello@jonmarsh.dev",
+      "url": "https://www.jonmarsh.dev"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jmsv/oaty/issues"
