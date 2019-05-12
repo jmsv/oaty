@@ -13,6 +13,8 @@ const testArray = [{
   fruit: 'banana'
 }]
 
+var results = []
+
 function time(runs) {
     var oaty = new OatyArray({data: testArray});
   
