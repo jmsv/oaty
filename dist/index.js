@@ -8,7 +8,7 @@ var OatyArray = /** @class */ (function () {
             if (options.data !== undefined) {
                 this.push.apply(this, options.data);
             }
-            if (options.keys != undefined) {
+            if (options.keys !== undefined) {
                 this.keys = options.keys;
             }
         }
