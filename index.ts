@@ -1,64 +1,59 @@
 export class OatyArray {
-  private keys: string[] | undefined
-  private original: object[] = []
-  private transposed: { [key: string]: any } = {}
+  private _keys: string[] | undefined
+  private _original: object[] = []
+  private _transposed: { [key: string]: any } = {}
 
-  constructor(options?: { data?: object[], keys?: string[] }) {
+  constructor(data?: object[], options?: { keys?: string[] }) {
+    if (data !== undefined) { this.push(...data) }
     if (options !== undefined) {
-      if (options.data !== undefined) { this.push(...options.data) }
-      if (options.keys !== undefined) { this.keys = options.keys }
+      if (options.keys !== undefined) { this._keys = options.keys }
     }
+  }
+
+  get keys(): string[] | undefined {
+    return this._keys
   }
 
   get length(): number {
-    return this.original.length
+    return this._original.length
   }
 
-  public getKeys(): string[] | undefined {
-    return this.keys
+  get original(): object[] {
+    return this._original
   }
 
-  public getOriginal(): object[] {
-    return this.original
-  }
-
-  public getTransposed(): object[] {
-    return this.original
+  get transposed(): object[] {
+    return this._original
   }
 
   public get(keyName: string, keyValue: string): object[] | undefined {
-    if (this.transposed === undefined
-     || this.transposed[keyName] === undefined) {
+    if (this._transposed[keyName] === undefined) {
       return undefined
     }
-    return this.transposed[keyName][keyValue]
+    return this._transposed[keyName][keyValue]
   }
 
   public push(...data: object[]) {
     data.forEach((datum) => {
       const clone = Object.assign({}, datum)
-      this.original.push(clone)
+      this._original.push(clone)
       this.transpose(clone)
     })
-    return this.length
-  }
-
-  private getKeysForObject(datum: object): string[] {
-    return this.keys !== undefined ? this.keys : Object.keys(datum)
+    return this._original.length
   }
 
   private transpose(datum: { [key: string]: any }) {
-    this.getKeysForObject(datum).forEach((key) => {
+    (this._keys || Object.keys(datum)).forEach((key: string) => {
       if (datum[key] === undefined) {
         return
       }
-      if (this.transposed[key] === undefined) {
-        this.transposed[key] = {}
+      if (this._transposed[key] === undefined) {
+        this._transposed[key] = {}
       }
-      if (this.transposed[key][datum[key]] === undefined) {
-        this.transposed[key][datum[key]] = [datum]
+      if (this._transposed[key][datum[key]] === undefined) {
+        this._transposed[key][datum[key]] = [datum]
       } else {
-        this.transposed[key][datum[key]].push(datum)
+        this._transposed[key][datum[key]].push(datum)
       }
     })
   }

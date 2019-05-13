@@ -1,40 +1,51 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var OatyArray = /** @class */ (function () {
-    function OatyArray(options) {
-        this.original = [];
-        this.transposed = {};
+    function OatyArray(data, options) {
+        this._original = [];
+        this._transposed = {};
+        if (data !== undefined) {
+            this.push.apply(this, data);
+        }
         if (options !== undefined) {
-            if (options.data !== undefined) {
-                this.push.apply(this, options.data);
-            }
             if (options.keys !== undefined) {
-                this.keys = options.keys;
+                this._keys = options.keys;
             }
         }
     }
-    Object.defineProperty(OatyArray.prototype, "length", {
+    Object.defineProperty(OatyArray.prototype, "keys", {
         get: function () {
-            return this.original.length;
+            return this._keys;
         },
         enumerable: true,
         configurable: true
     });
-    OatyArray.prototype.getKeys = function () {
-        return this.keys;
-    };
-    OatyArray.prototype.getOriginal = function () {
-        return this.original;
-    };
-    OatyArray.prototype.getTransposed = function () {
-        return this.original;
-    };
+    Object.defineProperty(OatyArray.prototype, "length", {
+        get: function () {
+            return this._original.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OatyArray.prototype, "original", {
+        get: function () {
+            return this._original;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OatyArray.prototype, "transposed", {
+        get: function () {
+            return this._original;
+        },
+        enumerable: true,
+        configurable: true
+    });
     OatyArray.prototype.get = function (keyName, keyValue) {
-        if (this.transposed === undefined
-            || this.transposed[keyName] === undefined) {
+        if (this._transposed[keyName] === undefined) {
             return undefined;
         }
-        return this.transposed[keyName][keyValue];
+        return this._transposed[keyName][keyValue];
     };
     OatyArray.prototype.push = function () {
         var _this = this;
@@ -44,28 +55,25 @@ var OatyArray = /** @class */ (function () {
         }
         data.forEach(function (datum) {
             var clone = Object.assign({}, datum);
-            _this.original.push(clone);
+            _this._original.push(clone);
             _this.transpose(clone);
         });
-        return this.length;
-    };
-    OatyArray.prototype.getKeysForObject = function (datum) {
-        return this.keys !== undefined ? this.keys : Object.keys(datum);
+        return this._original.length;
     };
     OatyArray.prototype.transpose = function (datum) {
         var _this = this;
-        this.getKeysForObject(datum).forEach(function (key) {
+        (this._keys || Object.keys(datum)).forEach(function (key) {
             if (datum[key] === undefined) {
                 return;
             }
-            if (_this.transposed[key] === undefined) {
-                _this.transposed[key] = {};
+            if (_this._transposed[key] === undefined) {
+                _this._transposed[key] = {};
             }
-            if (_this.transposed[key][datum[key]] === undefined) {
-                _this.transposed[key][datum[key]] = [datum];
+            if (_this._transposed[key][datum[key]] === undefined) {
+                _this._transposed[key][datum[key]] = [datum];
             }
             else {
-                _this.transposed[key][datum[key]].push(datum);
+                _this._transposed[key][datum[key]].push(datum);
             }
         });
     };

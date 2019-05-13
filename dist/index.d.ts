@@ -1,17 +1,15 @@
 export declare class OatyArray {
-    private keys;
-    private original;
-    private transposed;
-    constructor(options?: {
-        data?: object[];
+    private _keys;
+    private _original;
+    private _transposed;
+    constructor(data?: object[], options?: {
         keys?: string[];
     });
+    readonly keys: string[] | undefined;
     readonly length: number;
-    getKeys(): string[] | undefined;
-    getOriginal(): object[];
-    getTransposed(): object[];
+    readonly original: object[];
+    readonly transposed: object[];
     get(keyName: string, keyValue: string): object[] | undefined;
     push(...data: object[]): number;
-    private getKeysForObject;
     private transpose;
 }
