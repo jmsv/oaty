@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "npm run build && mocha --reporter spec",
+    "clean": "rimraf dist",
+    "benchmark": "npm run build && node dist/test/benchmark.js",
+    "build": "npm run clean && tsc",
+    "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
     "format": "tslint --project . --fix",
     "ci": "npm test",
     "postversion": "git push && git push --tags",
@@ -40,8 +42,13 @@
   },
   "homepage": "https://github.com/jmsv/oaty#readme",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.0.2",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
     "typescript": "^3.4.5"
   }

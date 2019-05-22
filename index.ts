@@ -3,10 +3,10 @@ export class OatyArray {
   private _original: object[] = []
   private _transposed: { [key: string]: any } = {}
 
-  constructor(data?: object[], options?: { keys?: string[] }) {
-    if (data !== undefined) { this.push(...data) }
+  constructor(options?: { data?: object[], keys?: string[] }) {
     if (options !== undefined) {
-      if (options.keys !== undefined) { this._keys = options.keys }
+      if (options.data !== undefined) { this.push(options.data) }
+      this._keys = options.keys
     }
   }
 
@@ -26,34 +26,26 @@ export class OatyArray {
     return this._original
   }
 
-  public get(keyName: string, keyValue: string): object[] | undefined {
-    if (this._transposed[keyName] === undefined) {
-      return undefined
-    }
-    return this._transposed[keyName][keyValue]
+  public get(keyName: string, keyValue: string): object[] {
+    return this._transposed[keyName][keyValue] || []
   }
 
-  public push(...data: object[]) {
-    data.forEach((datum) => {
-      const clone = Object.assign({}, datum)
-      this._original.push(clone)
-      this.transpose(clone)
+  public push(data: object[]) {
+    data.forEach((datum: object) => {
+      this._original.push(datum)
+      this.transpose(datum)
     })
     return this._original.length
   }
 
   private transpose(datum: { [key: string]: any }) {
     (this._keys || Object.keys(datum)).forEach((key: string) => {
-      if (datum[key] === undefined) {
-        return
-      }
-      if (this._transposed[key] === undefined) {
-        this._transposed[key] = {}
-      }
-      if (this._transposed[key][datum[key]] === undefined) {
-        this._transposed[key][datum[key]] = [datum]
-      } else {
-        this._transposed[key][datum[key]].push(datum)
+      if (datum[key] !== undefined) {
+        (this._transposed[key] === undefined)
+          ? this._transposed[key] = {[datum[key]]: [datum]}
+          : ((this._transposed[key][datum[key]] === undefined)
+            ? this._transposed[key][datum[key]] = [datum]
+            : this._transposed[key][datum[key]].push(datum))
       }
     })
   }
