@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { OatyArray, IOptions } from '../index'
+import { IOptions, OatyArray } from '../index'
 
 let fixture: Fixture
 
