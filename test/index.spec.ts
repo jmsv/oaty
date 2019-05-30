@@ -1,50 +1,48 @@
 import { expect } from 'chai'
-import { OatyArray } from '../index'
+import { OatyArray, IOptions } from '../index'
 
 let fixture: Fixture
 
-beforeEach(() => {
-  fixture = new Fixture()
-})
-
 describe('OatyArray', () => {
+  beforeEach(() => {
+    fixture = new Fixture()
+  })
   describe('new', () => {
-    context('()', () => {
+    context('([])', () => {
       it('initialises', () => {
-        fixture.givenOatyArray()
+        fixture.givenOatyArray([])
         fixture.thenOatyArrayExists()
       })
     })
 
-    context('({data})', () => {
+    context('([...], {}})', () => {
       it('initialises', () => {
-        const testArray = [
+        const initial = [
          { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 2, fruit: 'apple' },
          { a: 1, b: 3, fruit: 'banana' }]
-        fixture.givenOatyArray({data: testArray})
+        fixture.givenOatyArray(initial)
         fixture.thenOatyArrayExists()
-        fixture.thenOriginalsEquals(testArray)
+        fixture.thenOriginalsEquals(initial)
       })
     })
 
-    context('({keys})', () => {
+    context('([], {keys})', () => {
       it('initialises', () => {
-        fixture.givenOatyArray({keys: ['a', 'b', 'fruit']})
+        fixture.givenOatyArray([], {keys: ['a', 'b', 'fruit']})
         fixture.thenOatyArrayExists()
         fixture.thenKeysEquals(['a', 'b', 'fruit'])
       })
     })
 
-    context('({data, keys})', () => {
+    context('([...], {keys})', () => {
       it('initialises', () => {
-        const testArray = [
+        const initial = [
          { a: 1, b: 1, fruit: 'apple' },
          { a: 1, b: 2, fruit: 'apple' },
          { a: 1, b: 3, fruit: 'banana' }]
-        fixture.givenOatyArray({data: testArray, keys: ['a']})
+        fixture.givenOatyArray(initial, {keys: ['a']})
         fixture.thenOatyArrayExists()
-        fixture.thenOriginalsEquals(testArray)
+        fixture.thenOriginalsEquals(initial)
         fixture.thenKeysEquals(['a'])
       })
     })
@@ -52,100 +50,154 @@ describe('OatyArray', () => {
 
   describe('.push()', () => {
     it('adds data', () => {
-      const data = [
+      const push = [
        { a: 5, b: 5, fruit: 'potato' },
        { a: 6, b: 6, fruit: 'courgette' }]
-      fixture.givenOatyArray()
-      fixture.whenDataIsPushed(data)
-      fixture.thenOriginalsEquals(data)
+      fixture.givenOatyArray([])
+      fixture.whenDataIsPushed(push)
+      fixture.thenOriginalsEquals(push)
     })
 
     it('retains dereferenced data', () => {
-      let data: object[] | undefined = [
+      let push = [
        { a: 5, b: 5, fruit: 'potato' },
        { a: 6, b: 6, fruit: 'courgette' }]
-      fixture.givenOatyArray()
-      fixture.whenDataIsPushed(data!)
-      data = undefined
-      fixture.thenOriginalsEquals([{ a: 5, b: 5, fruit: 'potato' },
+      fixture.givenOatyArray([])
+      fixture.whenDataIsPushed(push)
+      push = []
+      fixture.thenOriginalsEquals([
+       { a: 5, b: 5, fruit: 'potato' },
        { a: 6, b: 6, fruit: 'courgette' }])
     })
 
-    it('returns the length of _original', () => {
-      const testArray = [
+    it('returns the length of _data', () => {
+      const initial = [
        { a: 1, b: 1, fruit: 'apple' },
        { a: 1, b: 2, fruit: 'apple' },
        { a: 1, b: 3, fruit: 'banana' }]
-      const data = [{ a: 1, b: 1, fruit: 'apple' },
+      const push = [{ a: 1, b: 1, fruit: 'apple' },
        { a: 1, b: 2, fruit: 'apple' },
        { a: 1, b: 3, fruit: 'banana' }]
-      fixture.givenOatyArray({data: testArray})
-      fixture.whenDataIsPushed(data)
-      fixture.thenCountIs(testArray.length + data.length)
+      fixture.givenOatyArray(initial)
+      fixture.whenDataIsPushed(push)
+      fixture.thenCountIs(6)
     })
   })
 
-  describe('.get()', () => {
-    context('initialised data', () => {
-      it('returns a match', () => {
-        const testArray = [
-         { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 2, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }]
-        fixture.givenOatyArray({data: testArray})
-        fixture.whenGetIsCalledWithKVP('fruit', 'banana')
-        fixture.thenMatchesEquals([{a: 1, b: 3, fruit: 'banana'}])
-      })
-      it('returns matches', () => {
-        const testArray = [
-         { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 2, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }]
-        fixture.givenOatyArray({data: testArray})
-        fixture.whenGetIsCalledWithKVP('fruit', 'apple')
-        fixture.thenMatchesEquals([
+  describe('.get', () => {
+    describe('(key, value)', () => {
+      context('initialised data', () => {
+        it('returns a match', () => {
+          const testArray = [
           { a: 1, b: 1, fruit: 'apple' },
-          { a: 1, b: 2, fruit: 'apple' }])
-      })
-    })
-
-    context('pushed data', () => {
-      it('returns a match', () => {
-        const data = [
-          { a: 5, b: 5, fruit: 'potato' },
-          { a: 6, b: 6, fruit: 'courgette' }]
-        fixture.givenOatyArray()
-        fixture.whenDataIsPushed(data)
-        fixture.whenGetIsCalledWithKVP('fruit', 'potato')
-        fixture.thenMatchesEquals([{ a: 5, b: 5, fruit: 'potato' }])
-      })
-    })
-
-    context('querying for initialised data alongside pushed data', () => {
-      it('returns a match', () => {
-        const testArray = [{ a: 1, b: 1, fruit: 'apple' },
           { a: 1, b: 2, fruit: 'apple' },
           { a: 1, b: 3, fruit: 'banana' }]
-        const data = [{ a: 5, b: 5, fruit: 'potato' },
-          { a: 6, b: 6, fruit: 'courgette' }]
-        fixture.givenOatyArray({data: testArray})
-        fixture.whenDataIsPushed(data)
-        fixture.whenGetIsCalledWithKVP('fruit', 'banana')
-        fixture.thenMatchesEquals([{ a: 1, b: 3, fruit: 'banana' }])
+          fixture.givenOatyArray(testArray)
+          fixture.whenGetIsCalled('fruit', 'banana')
+          fixture.thenMatchesEquals([{a: 1, b: 3, fruit: 'banana'}])
+        })
+        it('returns matches', () => {
+          const testArray = [
+          { a: 1, b: 1, fruit: 'apple' },
+          { a: 1, b: 2, fruit: 'apple' },
+          { a: 1, b: 3, fruit: 'banana' }]
+          fixture.givenOatyArray(testArray)
+          fixture.whenGetIsCalled('fruit', 'apple')
+          fixture.thenMatchesEquals([
+            { a: 1, b: 1, fruit: 'apple' },
+            { a: 1, b: 2, fruit: 'apple' }])
+        })
+      })
+
+      context('pushed data', () => {
+        it('returns a match', () => {
+          const data = [
+            { a: 5, b: 5, fruit: 'potato' },
+            { a: 6, b: 6, fruit: 'courgette' }]
+          fixture.givenOatyArray([])
+          fixture.whenDataIsPushed(data)
+          fixture.whenGetIsCalled('fruit', 'potato')
+          fixture.thenMatchesEquals([{ a: 5, b: 5, fruit: 'potato' }])
+        })
+      })
+
+      context('querying for non-existent value', () => {
+        it('returns undefined', () => {
+          const testArray = [{ a: 1, b: 1, fruit: 'apple' }]
+          fixture.givenOatyArray(testArray)
+          fixture.whenGetIsCalled('fruit', 'carrot')
+          fixture.thenMatchesEquals(undefined)
+        })
+        it('returns custom value', () => {
+          const testArray = [{ a: 1, b: 1, fruit: 'apple' }]
+          fixture.givenOatyArray(testArray, {noResultsReturns: []})
+          fixture.whenGetIsCalled('fruit', 'carrot')
+          fixture.thenMatchesEquals([])
+        })
       })
     })
 
-    context('querying for pushed data alongside initialised data', () => {
-      it('returns a match', () => {
-        const testArray = [{ a: 1, b: 1, fruit: 'apple' },
-          { a: 1, b: 2, fruit: 'apple' },
-          { a: 1, b: 3, fruit: 'banana' }]
-        const data = [{ a: 5, b: 5, fruit: 'potato' },
-          { a: 6, b: 6, fruit: 'courgette' }]
-        fixture.givenOatyArray({data: testArray})
-        fixture.whenDataIsPushed(data)
-        fixture.whenGetIsCalledWithKVP('fruit', 'potato')
-        fixture.thenMatchesEquals([{ a: 5, b: 5, fruit: 'potato' }])
+    describe('(key)', () => {
+      context('initialised data', () => {
+        it('returns a match', () => {
+          fixture.givenOatyArray([{ a: 5, b: 5, fruit: 'potato' }])
+          fixture.whenGetIsCalled('fruit')
+          fixture.thenMatchesEquals({potato: [{ a: 5, b: 5, fruit: 'potato' }]})
+        })
+      })
+
+      context('pushed data', () => {
+        it('returns a match', () => {
+          fixture.givenOatyArray([])
+          fixture.whenDataIsPushed([{ a: 5, b: 5, fruit: 'potato' }])
+          fixture.whenGetIsCalled('fruit')
+          fixture.thenMatchesEquals({potato: [{ a: 5, b: 5, fruit: 'potato' }]})
+        })
+      })
+
+      context('querying for initialised data alongside pushed data', () => {
+        it('returns a match', () => {
+          const testArray = [
+            { a: 1, b: 1, fruit: 'apple' },
+            { a: 1, b: 2 },
+            { a: 1, b: 3 }]
+          const data = [
+            { a: 5, b: 5 },
+            { a: 6, b: 6, fruit: 'courgette' }]
+          fixture.givenOatyArray(testArray)
+          fixture.whenDataIsPushed(data)
+          fixture.whenGetIsCalled('fruit')
+          fixture.thenMatchesEquals({
+            apple: [{ a: 1, b: 1, fruit: 'apple' }],
+            courgette: [{ a: 6, b: 6, fruit: 'courgette' }]})
+        })
+      })
+
+      context('querying for pushed data alongside initialised data', () => {
+        it('returns a match', () => {
+          const testArray = [
+            { a: 1, b: 1, fruit: 'apple' },
+            { a: 1, b: 2, fruit: 'banana' },
+            { a: 1, b: 3 }]
+          const data = [
+            { a: 5, b: 5, fruit: 'potato' },
+            { a: 6, b: 6, taste: 'bad' }]
+          fixture.givenOatyArray(testArray)
+          fixture.whenDataIsPushed(data)
+          fixture.whenGetIsCalled('fruit')
+          fixture.thenMatchesEquals({
+            apple: [{ a: 1, b: 1, fruit: 'apple' }],
+            banana: [{ a: 1, b: 2, fruit: 'banana' }],
+            potato: [{ a: 5, b: 5, fruit: 'potato' }]})
+        })
+      })
+
+      context('querying for non-existent key', () => {
+        it('returns undefined', () => {
+          fixture.givenOatyArray([])
+          fixture.whenGetIsCalled('d')
+          fixture.thenMatchesEquals(undefined)
+        })
       })
     })
   })
@@ -157,15 +209,15 @@ class Fixture {
   private _count: number = 0
   private _matches: object[] = []
 
-  public givenOatyArray(options?: { data?: object[], keys?: string[] }) {
-    this._oatyArray = new OatyArray(options)
+  public givenOatyArray(data: object[], options: IOptions = {}) {
+    this._oatyArray = new OatyArray(data, options)
   }
 
   public whenDataIsPushed(data: object[]) {
-    this._count = this._oatyArray!.push(data)
+    this._count = this._oatyArray!.push(...data)
   }
 
-  public whenGetIsCalledWithKVP(key: string, value: string) {
+  public whenGetIsCalled(key: string, value?: string) {
     this._matches = this._oatyArray!.get(key, value)
   }
 
@@ -177,7 +229,7 @@ class Fixture {
     expect(this._oatyArray!.keys).to.deep.equal(keys)
   }
 
-  public thenMatchesEquals(matches: object[]) {
+  public thenMatchesEquals(matches: any) {
     expect(this._matches).to.deep.equal(matches)
   }
 
@@ -187,6 +239,6 @@ class Fixture {
   }
 
   public thenOriginalsEquals(data: object[]) {
-    expect(this._oatyArray!.original).to.deep.equal(data)
+    expect(this._oatyArray!.data).to.deep.equal(data)
   }
 }

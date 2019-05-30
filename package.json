@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "benchmark": "npm run build && node dist/test/benchmark.js",
+    "benchmark": "ts-node benchmark/index.spec.ts --outDir ./benchmark",
     "build": "npm run clean && tsc",
     "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
     "format": "tslint --project . --fix",
