@@ -1,40 +1,75 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var OatyArray = /** @class */ (function () {
-    function OatyArray(input, keys) {
+    function OatyArray(_data, _options) {
+        if (_options === void 0) { _options = {}; }
+        this._data = _data;
+        this._options = _options;
         this._transposed = {};
-        this._original = input.map(function (x) { return Object.assign({}, x); });
-        this._keys = keys;
-        this._transposed = transpose(this._keys, this._original);
+        this.transpose(_data);
     }
+    Object.defineProperty(OatyArray.prototype, "keys", {
+        get: function () {
+            return this._options.keys;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(OatyArray.prototype, "length", {
         get: function () {
-            return this._original.length;
+            return this._data.length;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OatyArray.prototype, "data", {
+        get: function () {
+            return this._data;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(OatyArray.prototype, "transposed", {
+        get: function () {
+            return this._data;
         },
         enumerable: true,
         configurable: true
     });
     OatyArray.prototype.get = function (keyName, keyValue) {
-        return this._transposed[keyName][keyValue];
+        return (keyValue === undefined)
+            ? this._transposed[keyName]
+            : (this._transposed[keyName] === undefined)
+                ? this._options.missingKeyReturns
+                : (this._transposed[keyName][keyValue] === undefined)
+                    ? this._options.noResultsReturns
+                    : this._transposed[keyName][keyValue];
     };
     OatyArray.prototype.push = function () {
         var _a;
-        var items = [];
+        var data = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            items[_i] = arguments[_i];
+            data[_i] = arguments[_i];
         }
-        this._transposed = transpose(this._keys, items, this._transposed);
-        return (_a = this._original).push.apply(_a, items);
+        this.transpose(data);
+        return (_a = this._data).push.apply(_a, data);
+    };
+    OatyArray.prototype.transpose = function (data) {
+        var _a;
+        for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+            var datum = data_1[_i];
+            for (var _b = 0, _c = (this.keys || Object.keys(datum)); _b < _c.length; _b++) {
+                var key = _c[_b];
+                if (datum[key] !== undefined) {
+                    (this._transposed[key] === undefined)
+                        ? this._transposed[key] = (_a = {}, _a[datum[key]] = [datum], _a)
+                        : ((this._transposed[key][datum[key]] === undefined)
+                            ? this._transposed[key][datum[key]] = [datum]
+                            : this._transposed[key][datum[key]].push(datum));
+                }
+            }
+        }
     };
     return OatyArray;
 }());
 exports.OatyArray = OatyArray;
-var transpose = function (keys, items, current) {
-    return keys.reduce(function (transposed, key) {
-        transposed[key] = items.reduce(function (acc, item) {
-            acc[item[key]] ? acc[item[key]].push(item) : acc[item[key]] = [item];
-            return acc;
-        }, current || {});
-        return transposed;
-    }, {});
-};

@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "test": "npm run build && mocha --reporter spec",
+    "clean": "rimraf dist",
+    "benchmark": "ts-node benchmark/index.spec.ts --outDir ./benchmark",
+    "build": "npm run clean && tsc",
+    "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
     "format": "tslint --project . --fix",
     "ci": "npm test",
     "postversion": "git push && git push --tags",
@@ -18,21 +20,35 @@
     "url": "git+https://github.com/jmsv/oaty.git"
   },
   "keywords": [
+    "array",
+    "keys",
     "oaty",
     "object",
-    "array",
-    "transposer",
-    "keys"
+    "objects",
+    "transpose",
+    "transposer"
   ],
   "author": "James Vickery <dev@jamesvickery.net>",
+  "contributors": [
+    {
+      "name": "Jonathan Marsh",
+      "email": "hello@jonmarsh.dev",
+      "url": "https://www.jonmarsh.dev"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jmsv/oaty/issues"
   },
   "homepage": "https://github.com/jmsv/oaty#readme",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.0.2",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
+    "rimraf": "^2.6.3",
+    "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
     "typescript": "^3.4.5"
   }
