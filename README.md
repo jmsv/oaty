@@ -138,9 +138,12 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 #### `0.3.0`
 
 - Added `get`s for `data`, `keys`, and `transposed`
+- Made `keys` optional - will transpose every (root) key in an object
 - Added two options to change the return value for when they key or value of `.get()` is undefined
 - Renamed `original` to `data`
 - `.get()` can now retrieve all objects that have a key, like `.get('fruit')` 
+- Added simple benchmark
+- Added more tests
 
 #### `0.2.1`
 
