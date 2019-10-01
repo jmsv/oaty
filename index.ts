@@ -1,13 +1,15 @@
 export interface IOptions {
-  keys?: string[], // only these keys will be transposed
-  missingKeyReturns?: any, // the return value for when transposed[key] does not exist when using get(key, value)
-  noResultsReturns?: any // the return value for when there are no results when using get(key, value)
+  keys?: string[] // only these keys will be transposed
 }
 
-export class OatyArray {
-  private _transposed: { [key: string]: any } = {}
+export interface ITranspose<T> {
+  [key: string]: T[]
+}
 
-  constructor(private _data: object[], private _options: IOptions = {}) {
+export class OatyArray<T = any> {
+  private _transposed: ITranspose<T> = {}
+
+  constructor(private _data: T[], private _options: IOptions = {}) {
     this.transpose(_data)
   }
 
@@ -19,39 +21,49 @@ export class OatyArray {
     return this._data.length
   }
 
-  get data(): object[] {
+  get data(): T[] {
     return this._data
   }
 
-  get transposed(): object[] {
-    return this._data
+  get transposed(): ITranspose<T> {
+    return this._transposed
   }
 
-  public get(keyName: string, keyValue?: string): object[] | object | any {
-    return (keyValue === undefined)
-          ? this._transposed[keyName]
-          : (this._transposed[keyName] === undefined)
-            ? this._options.missingKeyReturns
-            : (this._transposed[keyName][keyValue] === undefined)
-              ? this._options.noResultsReturns
-              : this._transposed[keyName][keyValue]
+  public get(keyName: string, keyValue?: string): T[] | undefined {
+    if (keyValue === undefined) {
+      return this._transposed[keyName]
+    }
+
+    if (this._transposed[keyName] === undefined) {
+      throw new ReferenceError(`The key '${keyName}' has not been transposed`)
+    }
+
+    return this._transposed[keyName][keyValue]
   }
 
-  public push(...data: object[]) {
+  public push(...data: T[]) {
     this.transpose(data)
     return this._data.push(...data)
   }
 
-  private transpose(data: object[]) {
+  private transpose(data: T[]) {
+    if (data) {
+      return
+    }
     for (const datum of data) {
       for (const key of (this.keys || Object.keys(datum))) {
-        if (datum[key] !== undefined) {
-          (this._transposed[key] === undefined)
-            ? this._transposed[key] = {[datum[key]]: [datum]}
-            : ((this._transposed[key][datum[key]] === undefined)
-              ? this._transposed[key][datum[key]] = [datum]
-              : this._transposed[key][datum[key]].push(datum))
+        if (datum[key] === undefined) {
+          continue
         }
+        if (this._transposed[key] === undefined) {
+          this._transposed[key] = {[datum[key]]: [datum]}
+          continue
+        }
+        if (this._transposed[key][datum[key]] === undefined) {
+          this._transposed[key][datum[key]] = [datum]
+          continue
+        }
+        this._transposed[key][datum[key]].push(datum)
       }
     }
   }
