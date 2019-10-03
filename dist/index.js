@@ -31,19 +31,19 @@ var OatyArray = /** @class */ (function () {
     });
     Object.defineProperty(OatyArray.prototype, "transposed", {
         get: function () {
-            return this._data;
+            return this._transposed;
         },
         enumerable: true,
         configurable: true
     });
     OatyArray.prototype.get = function (keyName, keyValue) {
-        return (keyValue === undefined)
-            ? this._transposed[keyName]
-            : (this._transposed[keyName] === undefined)
-                ? this._options.missingKeyReturns
-                : (this._transposed[keyName][keyValue] === undefined)
-                    ? this._options.noResultsReturns
-                    : this._transposed[keyName][keyValue];
+        if (keyValue === undefined) {
+            return this._transposed[keyName];
+        }
+        if (this._transposed[keyName] === undefined) {
+            throw new ReferenceError("The key '" + keyName + "' has not been transposed");
+        }
+        return this._transposed[keyName][keyValue];
     };
     OatyArray.prototype.push = function () {
         var _a;
@@ -60,13 +60,18 @@ var OatyArray = /** @class */ (function () {
             var datum = data_1[_i];
             for (var _b = 0, _c = (this.keys || Object.keys(datum)); _b < _c.length; _b++) {
                 var key = _c[_b];
-                if (datum[key] !== undefined) {
-                    (this._transposed[key] === undefined)
-                        ? this._transposed[key] = (_a = {}, _a[datum[key]] = [datum], _a)
-                        : ((this._transposed[key][datum[key]] === undefined)
-                            ? this._transposed[key][datum[key]] = [datum]
-                            : this._transposed[key][datum[key]].push(datum));
+                if (datum[key] === undefined) {
+                    continue;
                 }
+                if (this._transposed[key] === undefined) {
+                    this._transposed[key] = (_a = {}, _a[datum[key]] = [datum], _a);
+                    continue;
+                }
+                if (this._transposed[key][datum[key]] === undefined) {
+                    this._transposed[key][datum[key]] = [datum];
+                    continue;
+                }
+                this._transposed[key][datum[key]].push(datum);
             }
         }
     };

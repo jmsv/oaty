@@ -2,14 +2,12 @@ export interface IOptions {
   keys?: string[] // only these keys will be transposed
 }
 
-export interface ITranspose<T> {
-  [key: string]: T[]
-}
+export type Transposed<T> = { [key: string]: { [key: string]: [T] } }
 
 export class OatyArray<T = any> {
-  private _transposed: ITranspose<T> = {}
+  private _transposed: Transposed<T> = {}
 
-  constructor(private _data: T[], private _options: IOptions = {}) {
+  constructor(private _data: T[] = [], private _options: IOptions = {}) {
     this.transpose(_data)
   }
 
@@ -25,17 +23,17 @@ export class OatyArray<T = any> {
     return this._data
   }
 
-  get transposed(): ITranspose<T> {
+  get transposed(): Transposed<T> {
     return this._transposed
   }
 
-  public get(keyName: string, keyValue?: string): T[] | undefined {
-    if (keyValue === undefined) {
-      return this._transposed[keyName]
-    }
-
+  public get(keyName: string, keyValue?: string): { [key: string]: [T] } | T[] | undefined {
     if (this._transposed[keyName] === undefined) {
       throw new ReferenceError(`The key '${keyName}' has not been transposed`)
+    }
+
+    if (keyValue === undefined) {
+      return this._transposed[keyName]
     }
 
     return this._transposed[keyName][keyValue]
@@ -47,9 +45,6 @@ export class OatyArray<T = any> {
   }
 
   private transpose(data: T[]) {
-    if (data) {
-      return
-    }
     for (const datum of data) {
       for (const key of (this.keys || Object.keys(datum))) {
         if (datum[key] === undefined) {
