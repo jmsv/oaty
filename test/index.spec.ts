@@ -1,6 +1,10 @@
 import { expect } from 'chai'
 import { IOptions, OatyArray, Transposed } from '../index'
 
+class Dummy {
+  public data: string = 'hello'
+}
+
 let fixture: Fixture
 
 describe('OatyArray', () => {
@@ -282,16 +286,53 @@ describe('OatyArray', () => {
       })
     })
   })
+
+  describe('<T>', () => {
+    describe('.data', () => {
+      context('initalised data', () => {
+        it('returns data of type T[]', () => {
+          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.thenDataEquals<Dummy[]>([new Dummy()], 'Dummy')
+        })
+      })
+
+    })
+    describe('.get', () => {
+      describe('initialised data', () => {
+        it('returns data of type T[]', () => {
+          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.whenGetIsCalled('data', 'hello')
+          fixture.thenMatchesEquals<Dummy[]>([new Dummy()], 'Dummy')
+        })
+      })
+    })
+
+    describe('.transposed', () => {
+      describe('initialised data', () => {
+        it('returns data of type [T]', () => {
+          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.thenTransposedEquals<Dummy>({
+            data: {
+              hello: [
+                new Dummy(),
+              ],
+            },
+          }, 'Dummy')
+        })
+      })
+    })
+  })
 })
 
+// tslint:disable-next-line: max-classes-per-file
 class Fixture {
   private _oatyArray: OatyArray | undefined
 
   private _count: number | undefined
-  private _matches: { [key: string]: [any] } | object[] | undefined
+  private _matches: { [key: string]: [any] } | any[] | undefined
 
-  public givenOatyArray(data?: object[], options?: IOptions) {
-    this._oatyArray = new OatyArray(data, options)
+  public givenOatyArray<T>(data?: T[], options?: IOptions) {
+    this._oatyArray = new OatyArray<T>(data, options)
   }
 
   public whenDataIsPushed(data: object[]) {
@@ -313,16 +354,25 @@ class Fixture {
   public thenLengthEquals(length: number) {
     expect(this._oatyArray!.length).to.equal(length)
   }
-  public thenDataEquals(data: any) {
+  public thenDataEquals<T>(data: T, type?: string) {
     expect(this._oatyArray!.data).to.deep.equal(data)
+    if (type === 'Dummy') {
+      expect(this._oatyArray!.data[0]).to.be.an.instanceOf(Dummy)
+    }
   }
 
-  public thenTransposedEquals(transposed: Transposed<any>) {
+  public thenTransposedEquals<T>(transposed: Transposed<T>, type?: string) {
     expect(this._oatyArray!.transposed).to.deep.equal(transposed)
+    if (type === 'Dummy') {
+      expect(this._oatyArray!.transposed!.data!.hello![0]).to.be.an.instanceOf(Dummy)
+    }
   }
 
-  public thenMatchesEquals(matches: any) {
+  public thenMatchesEquals<T>(matches: T, type?: string) {
     expect(this._matches).to.deep.equal(matches)
+    if (type === 'Dummy') {
+      expect(this._matches![0]).to.be.an.instanceOf(Dummy)
+    }
   }
 
   public thenOatyArrayExists() {

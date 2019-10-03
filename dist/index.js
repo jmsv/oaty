@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var OatyArray = /** @class */ (function () {
     function OatyArray(_data, _options) {
+        if (_data === void 0) { _data = []; }
         if (_options === void 0) { _options = {}; }
         this._data = _data;
         this._options = _options;
@@ -37,11 +38,11 @@ var OatyArray = /** @class */ (function () {
         configurable: true
     });
     OatyArray.prototype.get = function (keyName, keyValue) {
-        if (keyValue === undefined) {
-            return this._transposed[keyName];
-        }
         if (this._transposed[keyName] === undefined) {
             throw new ReferenceError("The key '" + keyName + "' has not been transposed");
+        }
+        if (keyValue === undefined) {
+            return this._transposed[keyName];
         }
         return this._transposed[keyName][keyValue];
     };

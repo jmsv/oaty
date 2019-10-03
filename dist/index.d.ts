@@ -10,7 +10,7 @@ export declare class OatyArray<T = any> {
     private _data;
     private _options;
     private _transposed;
-    constructor(_data: T[], _options?: IOptions);
+    constructor(_data?: T[], _options?: IOptions);
     readonly keys: string[] | undefined;
     readonly length: number;
     readonly data: T[];
