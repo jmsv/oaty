@@ -1,4 +1,4 @@
-export interface IOptions {
+export interface Options {
   keys?: string[] // only these keys will be transposed
 }
 
@@ -7,7 +7,7 @@ export type Transposed<T> = { [key: string]: { [key: string]: [T] } }
 export class OatyArray<T = any> {
   private _transposed: Transposed<T> = {}
 
-  constructor(private _data: T[] = [], private _options: IOptions = {}) {
+  constructor(private _data: T[] = [], private _options: Options = {}) {
     this.transpose(_data)
   }
 

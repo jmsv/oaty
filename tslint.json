@@ -6,6 +6,7 @@
     "max-line-length": { "options": [120] },
     "variable-name": [true, "allow-leading-underscore"],
     "indent": [true, "spaces", 2],
+    "interface-name": [true, "never-prefix"],
     "interface-over-type-literal": false
   }
 }

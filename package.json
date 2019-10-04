@@ -51,7 +51,7 @@
     "nyc": "^14.1.1",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
+    "tslint": "^5.20.0",
     "typescript": "^3.4.5"
   },
   "nyc": {
@@ -66,7 +66,7 @@
       "lcov"
     ],
     "all": true,
-    "check-coverage": true, 
+    "check-coverage": true,
     "statements": 100,
     "functions": 100,
     "branches": 100,
