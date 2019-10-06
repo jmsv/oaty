@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { IOptions, OatyArray, Transposed } from '../index'
+import { Options, OatyArray, Transposed } from '../index'
 
 class Dummy {
   public data: string = 'hello'
@@ -331,7 +331,7 @@ class Fixture {
   private _count: number | undefined
   private _matches: { [key: string]: [any] } | any[] | undefined
 
-  public givenOatyArray<T>(data?: T[], options?: IOptions) {
+  public givenOatyArray<T>(data?: T[], options?: Options) {
     this._oatyArray = new OatyArray<T>(data, options)
   }
 
