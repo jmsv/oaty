@@ -135,6 +135,16 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 
 ### Changelog
 
+#### `0.4.0`
+
+- Oaty can now be initialised with `new OatyArray<T>()` so that `.get` , `.data`, and `.transposed` return data of type `T`. This is completely optional as `T` defaults to `any`.
+- Removed `missingKeyReturns` and `noResultsReturns` options.
+- Exported a new type for the `_transposed` property.
+- Expanded the ternary conditions to improve readability.
+- Made the `data` constructor param optional and default to `[]`.
+- When a key is not transposed and `.get` searches for that key, it will now throw a `ReferenceError`.
+- Added NYC and increased tests to 100% coverage.
+
 #### `0.3.0`
 
 - Added `get`s for `data`, `keys`, and `transposed`
