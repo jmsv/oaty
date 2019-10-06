@@ -11,7 +11,7 @@
     "build": "npm run clean && tsc",
     "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
     "format": "tslint --project . --fix",
-    "ci": "npm test",
+    "ci": "npm run coverage",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run ci",
     "preversion": "npm run ci"
