@@ -3,7 +3,7 @@ export interface Options<K> {
 }
 
 type TransposedValues<T, K extends keyof T, V extends T[K] = T[K]> = { 
-  [A in V extends string | number | symbol ? V : never]: T[] 
+  [A in V extends string | number | symbol ? V : never]: T[] | undefined
 };
 
 export type Transposed<T, K extends keyof T> = {
@@ -35,7 +35,7 @@ export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
 
   public get<A extends K>(keyName: A): TransposedValues<T, A>;
   public get<A extends K>(keyName: A, keyValue: T[A]): T[];
-  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] {
+  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] | undefined {
     if (keyValue === undefined) {
       return this._transposed[keyName]
     }
@@ -66,7 +66,7 @@ export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
           this._transposed[key][searchKey] = [datum]
           continue
         }
-        this._transposed[key][searchKey].push(datum)
+        this._transposed[key][searchKey]!.push(datum)
       }
     }
   }

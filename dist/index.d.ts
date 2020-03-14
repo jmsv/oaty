@@ -2,7 +2,7 @@ export interface Options<K> {
     keys?: K[];
 }
 declare type TransposedValues<T, K extends keyof T, V extends T[K] = T[K]> = {
-    [A in V extends string | number | symbol ? V : never]: T[];
+    [A in V extends string | number | symbol ? V : never]: T[] | undefined;
 };
 export declare type Transposed<T, K extends keyof T> = {
     [A in keyof T]: TransposedValues<T, K>;

@@ -309,7 +309,7 @@ class Fixture {
   public thenMatchesEquals<T>(matches: T, type?: string) {
     expect(this._matches).to.deep.equal(matches)
     if (type === 'Dummy') {
-      expect(this._matches![0]).to.be.an.instanceOf(Dummy)
+      expect((this._matches as any)[0]).to.be.an.instanceOf(Dummy)
     }
   }
 
