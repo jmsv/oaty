@@ -17,7 +17,7 @@ export declare class OatyArray<T extends Object = {}, K extends keyof T = keyof 
     readonly data: T[];
     readonly transposed: Transposed<T, K>;
     get<A extends K>(keyName: A): TransposedValues<T, A>;
-    get<A extends K>(keyName: A, keyValue: T[A]): T[] | undefined;
+    get<A extends K>(keyName: A, keyValue: T[A]): T[];
     push(...data: T[]): number;
     private transpose;
 }

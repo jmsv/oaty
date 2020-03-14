@@ -34,8 +34,8 @@ export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
   }
 
   public get<A extends K>(keyName: A): TransposedValues<T, A>;
-  public get<A extends K>(keyName: A, keyValue: T[A]): T[] | undefined;
-  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] | undefined {
+  public get<A extends K>(keyName: A, keyValue: T[A]): T[];
+  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] {
     if (keyValue === undefined) {
       return this._transposed[keyName]
     }
