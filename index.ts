@@ -51,10 +51,6 @@ export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
   private transpose(data: T[]) {
     for (const datum of data) {
       for (const key of (this.keys || Object.keys(datum) as (keyof typeof datum)[])) {
-        if (datum[key] === undefined) {
-          continue
-        }
-
         const searchKey = datum[key] as keyof TransposedValues<T, K>;
         
         if (this._transposed[key] === undefined) {

@@ -58,9 +58,6 @@ var OatyArray = /** @class */ (function () {
             var datum = data_1[_i];
             for (var _b = 0, _c = (this.keys || Object.keys(datum)); _b < _c.length; _b++) {
                 var key = _c[_b];
-                if (datum[key] === undefined) {
-                    continue;
-                }
                 var searchKey = datum[key];
                 if (this._transposed[key] === undefined) {
                     this._transposed[key] = (_a = {}, _a[searchKey] = [datum], _a);
