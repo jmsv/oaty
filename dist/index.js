@@ -38,9 +38,6 @@ var OatyArray = /** @class */ (function () {
         configurable: true
     });
     OatyArray.prototype.get = function (keyName, keyValue) {
-        if (this._transposed[keyName] === undefined) {
-            throw new ReferenceError("The key '" + keyName + "' has not been transposed");
-        }
         if (keyValue === undefined) {
             return this._transposed[keyName];
         }
@@ -64,15 +61,16 @@ var OatyArray = /** @class */ (function () {
                 if (datum[key] === undefined) {
                     continue;
                 }
+                var searchKey = datum[key];
                 if (this._transposed[key] === undefined) {
-                    this._transposed[key] = (_a = {}, _a[datum[key]] = [datum], _a);
+                    this._transposed[key] = (_a = {}, _a[searchKey] = [datum], _a);
                     continue;
                 }
-                if (this._transposed[key][datum[key]] === undefined) {
-                    this._transposed[key][datum[key]] = [datum];
+                if (this._transposed[key][searchKey] === undefined) {
+                    this._transposed[key][searchKey] = [datum];
                     continue;
                 }
-                this._transposed[key][datum[key]].push(datum);
+                this._transposed[key][searchKey].push(datum);
             }
         }
     };

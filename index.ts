@@ -1,17 +1,23 @@
-export interface Options {
-  keys?: string[] // only these keys will be transposed
+export interface Options<K> {
+  keys?: K[] // only these keys will be transposed
 }
 
-export type Transposed<T> = { [key: string]: { [key: string]: [T] } }
+type TransposedValues<T, K extends keyof T, V extends T[K] = T[K]> = { 
+  [A in V extends string | number | symbol ? V : never]: T[] 
+};
 
-export class OatyArray<T = any> {
-  private _transposed: Transposed<T> = {}
+export type Transposed<T, K extends keyof T> = {
+  [A in keyof T] : TransposedValues<T, K>
+};
 
-  constructor(private _data: T[] = [], private _options: Options = {}) {
+export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
+  private _transposed = {} as Transposed<T, K>;
+
+  constructor(private _data: T[] = [], private _options: Options<K> = {}) {
     this.transpose(_data)
   }
 
-  get keys(): string[] | undefined {
+  get keys(): K[] | undefined {
     return this._options.keys
   }
 
@@ -23,20 +29,18 @@ export class OatyArray<T = any> {
     return this._data
   }
 
-  get transposed(): Transposed<T> {
+  get transposed(): Transposed<T, K> {
     return this._transposed
   }
 
-  public get(keyName: string, keyValue?: string): { [key: string]: [T] } | T[] | undefined {
-    if (this._transposed[keyName] === undefined) {
-      throw new ReferenceError(`The key '${keyName}' has not been transposed`)
-    }
-
+  public get<A extends K>(keyName: A): TransposedValues<T, A>;
+  public get<A extends K>(keyName: A, keyValue: T[A]): T[] | undefined;
+  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] | undefined {
     if (keyValue === undefined) {
       return this._transposed[keyName]
     }
 
-    return this._transposed[keyName][keyValue]
+    return this._transposed[keyName][keyValue as keyof TransposedValues<T, A>]
   }
 
   public push(...data: T[]) {
@@ -46,19 +50,23 @@ export class OatyArray<T = any> {
 
   private transpose(data: T[]) {
     for (const datum of data) {
-      for (const key of (this.keys || Object.keys(datum))) {
+      for (const key of (this.keys || Object.keys(datum) as (keyof typeof datum)[])) {
         if (datum[key] === undefined) {
           continue
         }
+
+        const searchKey = datum[key] as keyof TransposedValues<T, K>;
+        
         if (this._transposed[key] === undefined) {
-          this._transposed[key] = {[datum[key]]: [datum]}
+          this._transposed[key] = {[searchKey]: [datum]} as TransposedValues<T, K>
           continue
         }
-        if (this._transposed[key][datum[key]] === undefined) {
-          this._transposed[key][datum[key]] = [datum]
+
+        if (this._transposed[key][searchKey] === undefined) {
+          this._transposed[key][searchKey] = [datum]
           continue
         }
-        this._transposed[key][datum[key]].push(datum)
+        this._transposed[key][searchKey].push(datum)
       }
     }
   }

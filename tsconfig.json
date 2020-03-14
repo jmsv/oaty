@@ -6,7 +6,6 @@
     "outDir": "./dist",
     "strict": true,
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
     "lib": ["es2015", "es2017", "dom"]
   },
   "exclude": [
