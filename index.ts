@@ -2,12 +2,12 @@ export interface Options<K> {
   keys?: K[] // only these keys will be transposed
 }
 
-type TransposedValues<T, K extends keyof T, V extends T[K] = T[K]> = { 
-  [A in V extends string | number | symbol ? V : never]: T[] | undefined
+type TransposedValues<T, K extends keyof T> = { 
+  [V in T[K] extends string | number | symbol ? T[K] : never]: T[] | undefined
 };
 
 export type Transposed<T, K extends keyof T> = {
-  [A in keyof T] : TransposedValues<T, K>
+  [Key in keyof T] : TransposedValues<T, K>
 };
 
 export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
@@ -33,14 +33,14 @@ export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
     return this._transposed
   }
 
-  public get<A extends K>(keyName: A): TransposedValues<T, A>;
-  public get<A extends K>(keyName: A, keyValue: T[A]): T[] | undefined;
-  public get<A extends K>(keyName: A, keyValue?: T[A]): TransposedValues<T, A> | T[] | undefined {
+  public get(keyName: K): TransposedValues<T, typeof keyName>;
+  public get(keyName: K, keyValue: T[typeof keyName]): T[] | undefined;
+  public get(keyName: K, keyValue?: T[typeof keyName]): TransposedValues<T, typeof keyName> | T[] | undefined {
     if (keyValue === undefined) {
       return this._transposed[keyName]
     }
 
-    return this._transposed[keyName][keyValue as keyof TransposedValues<T, A>]
+    return this._transposed[keyName][keyValue as keyof TransposedValues<T, typeof keyName>]
   }
 
   public push(...data: T[]) {
