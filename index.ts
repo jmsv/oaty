@@ -34,8 +34,8 @@ export class OatyArray<T = never, K extends keyof T = keyof T> {
     this.transpose(this._data);
   }
 
-  get keys(): [T] extends [never] ? K[] | undefined : K[] {
-    return (this._options.keys ?? Object.keys(this._transposed)) as [T] extends [never] ? K[] | undefined : K[]
+  get keys(): K[] {
+    return (this._options.keys ?? Object.keys(this._transposed)) as K[]
   }
 
   get length(): number {

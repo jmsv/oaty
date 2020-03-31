@@ -20,7 +20,7 @@ export declare class OatyArray<T = never, K extends keyof T = keyof T> {
     private _data;
     private _options;
     constructor(data?: readonly InferType<T, K>[], options?: Options<K>);
-    get keys(): [T] extends [never] ? K[] | undefined : K[];
+    get keys(): K[];
     get length(): number;
     get data(): InferType<T, K>[];
     get transposed(): Transposed<InferType<T, K>, K>;
