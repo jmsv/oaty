@@ -32,11 +32,13 @@ describe('OatyArray', () => {
       it('initialises', () => {
         const initial = [
          { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }]
+         { a: 1, b: 3, fruit: 'banana' }, 
+         { a: 2, b: 4, food: 'yum' }
+        ]
         fixture.givenOatyArray(initial)
         fixture.thenOatyArrayExists()
         fixture.thenOriginalsEquals(initial)
-        fixture.thenKeysEquals(["a", "b", "fruit"])
+        fixture.thenKeysEquals(["a", "b", "fruit", "food"])
       })
     })
 

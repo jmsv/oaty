@@ -7,18 +7,25 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Extract all the keys from the given array of objects
+ */
+var keys = function (data) {
+    return Array.from(data
+        .map(function (item) { return Object.keys(item); })
+        .reduce(function (keys, itemKeys) {
+        itemKeys.forEach(function (key) { return keys.add(key); });
+        return keys;
+    }, new Set()));
+};
 var OatyArray = /** @class */ (function () {
-    function OatyArray(data, _options) {
+    function OatyArray(data, options) {
         if (data === void 0) { data = []; }
-        if (_options === void 0) { _options = {
-            keys: data.length > 0 ?
-                Object.keys(data[0])
-                :
-                    undefined
-        }; }
-        this._options = _options;
         this._transposed = {};
         this._data = __spreadArrays(data);
+        this._options = options !== null && options !== void 0 ? options : {
+            keys: data.length > 0 ? keys(data) : undefined
+        };
         this.transpose(this._data);
     }
     Object.defineProperty(OatyArray.prototype, "keys", {
