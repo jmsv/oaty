@@ -32,7 +32,7 @@ describe('OatyArray', () => {
       it('initialises', () => {
         const initial = [
          { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }, 
+         { a: 1, b: 3, fruit: 'banana' },
          { a: 2, b: 4, food: 'yum' }
         ]
         fixture.givenOatyArray(initial)
@@ -42,12 +42,12 @@ describe('OatyArray', () => {
       })
     })
 
-    context('([], {keys})', () => {	
-      it('initialises', () => {	
-        fixture.givenOatyArray([], {keys: ['a', 'b', 'fruit']})	
-        fixture.thenOatyArrayExists()	
-        fixture.thenKeysEquals(['a', 'b', 'fruit'])	
-      })	
+    context('([], {keys})', () => {
+      it('initialises', () => {
+        fixture.givenOatyArray([], {keys: ['a', 'b', 'fruit']})
+        fixture.thenOatyArrayExists()
+        fixture.thenKeysEquals(['a', 'b', 'fruit'])
+      })
     });
 
     context('([...], {keys})', () => {
@@ -62,15 +62,28 @@ describe('OatyArray', () => {
         fixture.thenKeysEquals(['a'])
       })
     })
+
+    context('([...], {keys: undefined})', () => {
+      it('initialises', () => {
+        const initial = [
+         { a: 1, b: 1, fruit: 'apple' },
+         { a: 1, b: 2, fruit: 'apple' },
+         { a: 1, b: 3, fruit: 'banana' }]
+        fixture.givenOatyArray(initial, {keys: undefined})
+        fixture.thenOatyArrayExists()
+        fixture.thenOriginalsEquals(initial)
+        fixture.thenKeysEquals(['a'])
+      })
+    })
   })
 
-  describe('.keys', () => {	
-    context('with initialised data', () => {	
-      it('returns initialised data', () => {	
-        fixture.givenOatyArray([], {keys: ['a']})	
-        fixture.thenKeysEquals(['a'])	
-      })	
-    })	
+  describe('.keys', () => {
+    context('with initialised data', () => {
+      it('returns initialised data', () => {
+        fixture.givenOatyArray([], {keys: ['a']})
+        fixture.thenKeysEquals(['a'])
+      })
+    })
   })
 
   describe('.length', () => {
@@ -141,29 +154,29 @@ describe('OatyArray', () => {
       fixture.thenCountIs(6)
     })
 
-    it('transposes only .keys', () => {	
-      const keys = ['fruit']	
-      const push = [	
-       { a: 5, b: 5, fruit: 'potato' },	
-       { a: 6, b: 6, fruit: 'courgette' }]	
-      fixture.givenOatyArray([], {keys})	
-      fixture.whenDataIsPushed(push)	
-      fixture.thenTransposedEquals({	
-        fruit: {	
-          courgette: [{ a: 6, b: 6, fruit: 'courgette' }],	
-          potato: [{ a: 5, b: 5, fruit: 'potato' }],	
-        },	
-      })	
-    })	
+    it('transposes only .keys', () => {
+      const keys = ['fruit']
+      const push = [
+       { a: 5, b: 5, fruit: 'potato' },
+       { a: 6, b: 6, fruit: 'courgette' }]
+      fixture.givenOatyArray([], {keys})
+      fixture.whenDataIsPushed(push)
+      fixture.thenTransposedEquals({
+        fruit: {
+          courgette: [{ a: 6, b: 6, fruit: 'courgette' }],
+          potato: [{ a: 5, b: 5, fruit: 'potato' }],
+        },
+      })
+    })
 
-    it('does not tranpose objects with missing .keys', () => {	
-      const keys = ['fruit']	
-      const push = [	
-       { a: 5, b: 5 },	
-       { a: 6, b: 6 }]	
-      fixture.givenOatyArray([], {keys})	
-      fixture.whenDataIsPushed(push)	
-      fixture.thenTransposedEquals({})	
+    it('does not tranpose objects with missing .keys', () => {
+      const keys = ['fruit']
+      const push = [
+       { a: 5, b: 5 },
+       { a: 6, b: 6 }]
+      fixture.givenOatyArray([], {keys})
+      fixture.whenDataIsPushed(push)
+      fixture.thenTransposedEquals({})
     })
   })
 
@@ -223,14 +236,14 @@ describe('OatyArray', () => {
         })
       })
 
-      context('querying for non-existent key', () => {	
-        it('throws a ReferenceError', () => {	
-          const testArray = [{ a: 1, b: 1}]	
-          fixture.givenOatyArray(testArray)	
-          expect(() => {	
-            fixture.whenGetIsCalled('fruit')	
-          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)	
-        })	
+      context('querying for non-existent key', () => {
+        it('throws a ReferenceError', () => {
+          const testArray = [{ a: 1, b: 1}]
+          fixture.givenOatyArray(testArray)
+          expect(() => {
+            fixture.whenGetIsCalled('fruit')
+          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)
+        })
       })
     })
     describe('(key, value)', () => {
@@ -269,14 +282,14 @@ describe('OatyArray', () => {
         })
       })
 
-      context('querying for non-existent key', () => {	
-        it('throws a ReferenceError', () => {	
-          const testArray = [{ a: 1, b: 1}]	
-          fixture.givenOatyArray(testArray)	
-          expect(() => {	
-            fixture.whenGetIsCalled('fruit', 'carrot')	
-          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)	
-        })	
+      context('querying for non-existent key', () => {
+        it('throws a ReferenceError', () => {
+          const testArray = [{ a: 1, b: 1}]
+          fixture.givenOatyArray(testArray)
+          expect(() => {
+            fixture.whenGetIsCalled('fruit', 'carrot')
+          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)
+        })
       })
 
       context('querying for non-existent value', () => {
