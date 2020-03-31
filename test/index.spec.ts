@@ -62,19 +62,6 @@ describe('OatyArray', () => {
         fixture.thenKeysEquals(['a'])
       })
     })
-
-    context('([...], {keys: undefined})', () => {
-      it('initialises', () => {
-        const initial = [
-         { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 2, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }]
-        fixture.givenOatyArray(initial, {keys: undefined})
-        fixture.thenOatyArrayExists()
-        fixture.thenOriginalsEquals(initial)
-        fixture.thenKeysEquals(['a'])
-      })
-    })
   })
 
   describe('.keys', () => {

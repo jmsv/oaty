@@ -19,18 +19,6 @@ type InferType<T, K extends keyof any> = [T] extends [never]
     : { [Key in K]: any } & { [Key in string | number | symbol]: any }
   : T;
 
-/**
- * Extract all the keys from the given array of objects
- */
-const keys = <T>(data: readonly T[]): (keyof T)[] =>
-  Array.from(
-    data
-      .map((item) => Object.keys(item))
-      .reduce((keys, itemKeys) => {
-        itemKeys.forEach((key) => keys.add(key as keyof T));
-        return keys;
-      }, new Set<keyof T>())
-  );
 
 export class OatyArray<T = never, K extends keyof T = keyof T> {
   private _transposed = {} as Transposed<InferType<T, K>, K>;
@@ -39,17 +27,15 @@ export class OatyArray<T = never, K extends keyof T = keyof T> {
 
   constructor(
     data: readonly InferType<T, K>[] = [],
-    options?: Options<K>
+    options: Options<K> = {}
   ) {
     this._data = [...data];
-    this._options = options ?? { 
-      keys: data.length > 0 ? (keys(data) as K[]) : undefined 
-    }
+    this._options = options;
     this.transpose(this._data);
   }
 
   get keys(): [T] extends [never] ? K[] | undefined : K[] {
-    return this._options.keys as [T] extends [never] ? K[] | undefined : K[]
+    return (this._options.keys ?? Object.keys(this._transposed)) as [T] extends [never] ? K[] | undefined : K[]
   }
 
   get length(): number {
@@ -85,7 +71,7 @@ export class OatyArray<T = never, K extends keyof T = keyof T> {
 
   private transpose(data: readonly InferType<T, K>[]) {
     for (const datum of data) {
-      for (const key of (this.keys ?? Object.keys(datum) as (keyof typeof datum)[])) {
+      for (const key of (this._options.keys ?? Object.keys(datum) as (keyof typeof datum)[])) {
         if (datum[key] === undefined) {
           continue	
         }

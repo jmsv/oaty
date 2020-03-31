@@ -7,30 +7,19 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Extract all the keys from the given array of objects
- */
-var keys = function (data) {
-    return Array.from(data
-        .map(function (item) { return Object.keys(item); })
-        .reduce(function (keys, itemKeys) {
-        itemKeys.forEach(function (key) { return keys.add(key); });
-        return keys;
-    }, new Set()));
-};
 var OatyArray = /** @class */ (function () {
     function OatyArray(data, options) {
         if (data === void 0) { data = []; }
+        if (options === void 0) { options = {}; }
         this._transposed = {};
         this._data = __spreadArrays(data);
-        this._options = options !== null && options !== void 0 ? options : {
-            keys: data.length > 0 ? keys(data) : undefined
-        };
+        this._options = options;
         this.transpose(this._data);
     }
     Object.defineProperty(OatyArray.prototype, "keys", {
         get: function () {
-            return this._options.keys;
+            var _a;
+            return ((_a = this._options.keys) !== null && _a !== void 0 ? _a : Object.keys(this._transposed));
         },
         enumerable: true,
         configurable: true
@@ -79,7 +68,7 @@ var OatyArray = /** @class */ (function () {
         var _b;
         for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
             var datum = data_1[_i];
-            for (var _c = 0, _d = ((_b = this.keys) !== null && _b !== void 0 ? _b : Object.keys(datum)); _c < _d.length; _c++) {
+            for (var _c = 0, _d = ((_b = this._options.keys) !== null && _b !== void 0 ? _b : Object.keys(datum)); _c < _d.length; _c++) {
                 var key = _d[_c];
                 if (datum[key] === undefined) {
                     continue;
