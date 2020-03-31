@@ -22,7 +22,7 @@ type InferType<T, K extends keyof any> =
     :
     T;
 
-export class OatyArray<T = never, K extends keyof T = never> {
+export class OatyArray<T = never, K extends keyof T = keyof T> {
   private _transposed = {} as Transposed<InferType<T, K>, K>;
   private _data: InferType<T, K>[];
 
@@ -38,8 +38,8 @@ export class OatyArray<T = never, K extends keyof T = never> {
     this.transpose(this._data)
   }
 
-  get keys(): [K] extends [never] ? undefined : K[] {
-    return this._options.keys as [K] extends [never] ? undefined : K[]
+  get keys(): [T] extends [never] ? K[] | undefined : K[] {
+    return this._options.keys as [T] extends [never] ? K[] | undefined : K[]
   }
 
   get length(): number {

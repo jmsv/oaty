@@ -15,12 +15,12 @@ declare type InferType<T, K extends keyof any> = [T] extends [never] ? [K] exten
 } & {
     [Key in string | number | symbol]: any;
 } : T;
-export declare class OatyArray<T = never, K extends keyof T = never> {
+export declare class OatyArray<T = never, K extends keyof T = keyof T> {
     private _options;
     private _transposed;
     private _data;
     constructor(data?: readonly InferType<T, K>[], _options?: Options<K>);
-    get keys(): [K] extends [never] ? undefined : K[];
+    get keys(): [T] extends [never] ? K[] | undefined : K[];
     get length(): number;
     get data(): InferType<T, K>[];
     get transposed(): Transposed<InferType<T, K>, K>;
