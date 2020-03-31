@@ -10,8 +10,9 @@
     "benchmark": "ts-node benchmark/index.spec.ts --outDir ./benchmark",
     "build": "npm run clean && tsc",
     "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
+    "test-d": "npm run build && tsd",
     "format": "tslint --project . --fix",
-    "ci": "npm run coverage",
+    "ci": "npm run coverage && npm run test-d",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run ci",
     "preversion": "npm run ci"
@@ -51,9 +52,13 @@
     "nyc": "^14.1.1",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
+    "tsd": "^0.11.0",
     "tslint": "^5.20.0",
-    "typescript": "^3.4.5"
+    "typescript": "3.8.3"
   },
+  "tsd": {
+		"directory": "test"
+	},
   "nyc": {
     "extension": [
       ".ts"

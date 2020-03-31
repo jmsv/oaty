@@ -36,8 +36,17 @@ describe('OatyArray', () => {
         fixture.givenOatyArray(initial)
         fixture.thenOatyArrayExists()
         fixture.thenOriginalsEquals(initial)
+        fixture.thenKeysEquals(["a", "b", "fruit"])
       })
     })
+
+    context('([], {keys})', () => {	
+      it('initialises', () => {	
+        fixture.givenOatyArray([], {keys: ['a', 'b', 'fruit']})	
+        fixture.thenOatyArrayExists()	
+        fixture.thenKeysEquals(['a', 'b', 'fruit'])	
+      })	
+    });
 
     context('([...], {keys})', () => {
       it('initialises', () => {
@@ -51,6 +60,15 @@ describe('OatyArray', () => {
         fixture.thenKeysEquals(['a'])
       })
     })
+  })
+
+  describe('.keys', () => {	
+    context('with initialised data', () => {	
+      it('returns initialised data', () => {	
+        fixture.givenOatyArray([], {keys: ['a']})	
+        fixture.thenKeysEquals(['a'])	
+      })	
+    })	
   })
 
   describe('.length', () => {
@@ -120,6 +138,31 @@ describe('OatyArray', () => {
       fixture.whenDataIsPushed(push)
       fixture.thenCountIs(6)
     })
+
+    it('transposes only .keys', () => {	
+      const keys = ['fruit']	
+      const push = [	
+       { a: 5, b: 5, fruit: 'potato' },	
+       { a: 6, b: 6, fruit: 'courgette' }]	
+      fixture.givenOatyArray([], {keys})	
+      fixture.whenDataIsPushed(push)	
+      fixture.thenTransposedEquals({	
+        fruit: {	
+          courgette: [{ a: 6, b: 6, fruit: 'courgette' }],	
+          potato: [{ a: 5, b: 5, fruit: 'potato' }],	
+        },	
+      })	
+    })	
+
+    it('does not tranpose objects with missing .keys', () => {	
+      const keys = ['fruit']	
+      const push = [	
+       { a: 5, b: 5 },	
+       { a: 6, b: 6 }]	
+      fixture.givenOatyArray([], {keys})	
+      fixture.whenDataIsPushed(push)	
+      fixture.thenTransposedEquals({})	
+    })
   })
 
   describe('.get', () => {
@@ -177,6 +220,16 @@ describe('OatyArray', () => {
             potato: [{ a: 5, b: 5, fruit: 'potato' }]})
         })
       })
+
+      context('querying for non-existent key', () => {	
+        it('throws a ReferenceError', () => {	
+          const testArray = [{ a: 1, b: 1}]	
+          fixture.givenOatyArray(testArray)	
+          expect(() => {	
+            fixture.whenGetIsCalled('fruit')	
+          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)	
+        })	
+      })
     })
     describe('(key, value)', () => {
       context('initialised data', () => {
@@ -214,6 +267,16 @@ describe('OatyArray', () => {
         })
       })
 
+      context('querying for non-existent key', () => {	
+        it('throws a ReferenceError', () => {	
+          const testArray = [{ a: 1, b: 1}]	
+          fixture.givenOatyArray(testArray)	
+          expect(() => {	
+            fixture.whenGetIsCalled('fruit', 'carrot')	
+          }).to.throw(ReferenceError, `The key 'fruit' has not been transposed`)	
+        })	
+      })
+
       context('querying for non-existent value', () => {
         it('returns undefined', () => {
           const testArray = [{ a: 1, b: 1, fruit: 'apple' }]
@@ -238,9 +301,9 @@ describe('OatyArray', () => {
     describe('.get', () => {
       describe('initialised data', () => {
         it('returns data of type T[]', () => {
-          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.givenOatyArray([new Dummy()])
           fixture.whenGetIsCalled('data', 'hello')
-          fixture.thenMatchesEquals<Dummy[]>([new Dummy()], 'Dummy')
+          fixture.thenMatchesEquals([new Dummy()], 'Dummy')
         })
       })
     })
@@ -248,7 +311,7 @@ describe('OatyArray', () => {
     describe('.transposed', () => {
       describe('initialised data', () => {
         it('returns data of type [T]', () => {
-          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.givenOatyArray([new Dummy()])
           fixture.thenTransposedEquals({
             data: {
               hello: [
@@ -269,7 +332,7 @@ class Fixture {
   private _count: number | undefined
   private _matches: { [key: string]: [any] } | any[] | undefined
 
-  public givenOatyArray<T>(data?: T[], options?: Options<keyof T>) {
+  public givenOatyArray(data?: any[], options?: Options<any>) {
     this._oatyArray = new OatyArray(data, options)
   }
 

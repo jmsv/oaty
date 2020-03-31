@@ -2,59 +2,88 @@ export interface Options<K> {
   keys?: K[] // only these keys will be transposed
 }
 
-type TransposedValues<T, K extends keyof T> = { 
+type TransposedValues<T, K extends keyof T> = {
   [V in T[K] extends string | number | symbol ? T[K] : never]: T[] | undefined
 };
 
 export type Transposed<T, K extends keyof T> = {
-  [Key in keyof T] : TransposedValues<T, K>
+  [Key in keyof T]: TransposedValues<T, K>
 };
 
-export class OatyArray<T extends Object = {}, K extends keyof T = keyof T> {
-  private _transposed = {} as Transposed<T, K>;
+/**
+ * If T is not never, use T. Otherwise, infer the type from the keys K
+ */
+type InferType<T, K extends keyof any> =
+  [T] extends [never] ?
+    [K] extends [never] ?
+      any
+      :
+      {[Key in K]: any} & { [Key in string | number | symbol]: any }
+    :
+    T;
 
-  constructor(private _data: T[] = [], private _options: Options<K> = {}) {
-    this.transpose(_data)
+export class OatyArray<T = never, K extends keyof T = never> {
+  private _transposed = {} as Transposed<InferType<T, K>, K>;
+  private _data: InferType<T, K>[];
+
+  constructor(
+      data: readonly InferType<T, K>[] = [], 
+      private _options: Options<K> = { 
+        keys: data.length > 0 ? 
+          Object.keys(data[0] as object) as K[] 
+          : 
+          undefined
+      }) {
+    this._data = [...data];
+    this.transpose(this._data)
   }
 
-  get keys(): K[] | undefined {
-    return this._options.keys
+  get keys(): [K] extends [never] ? undefined : K[] {
+    return this._options.keys as [K] extends [never] ? undefined : K[]
   }
 
   get length(): number {
     return this._data.length
   }
 
-  get data(): T[] {
+  get data(): InferType<T, K>[] {
     return this._data
   }
 
-  get transposed(): Transposed<T, K> {
+  get transposed(): Transposed<InferType<T, K>, K> {
     return this._transposed
   }
 
-  public get(keyName: K): TransposedValues<T, typeof keyName>;
-  public get(keyName: K, keyValue: T[typeof keyName]): T[] | undefined;
-  public get(keyName: K, keyValue?: T[typeof keyName]): TransposedValues<T, typeof keyName> | T[] | undefined {
+  public get<SK extends K>(keyName: SK): TransposedValues<InferType<T, K>, SK>;
+  public get<SK extends K>(keyName: SK, keyValue: InferType<T, K>[SK]): InferType<T, K>[] | undefined;
+  public get<SK extends K>(keyName: SK, keyValue?: InferType<T, K>[SK]): TransposedValues<InferType<T, K>, SK> | InferType<T, K>[] | undefined {
+    if (this._transposed[keyName] === undefined) {
+      throw new ReferenceError(`The key '${keyName}' has not been transposed`)
+    }
+
     if (keyValue === undefined) {
       return this._transposed[keyName]
     }
 
-    return this._transposed[keyName][keyValue as keyof TransposedValues<T, typeof keyName>]
+    return this._transposed[keyName][keyValue as keyof TransposedValues<InferType<T, K>, SK>]
   }
 
-  public push(...data: T[]) {
+  public push(...data: readonly InferType<T, K>[]) {
     this.transpose(data)
     return this._data.push(...data)
   }
 
-  private transpose(data: T[]) {
+  private transpose(data: readonly InferType<T, K>[]) {
     for (const datum of data) {
-      for (const key of (this.keys || Object.keys(datum) as (keyof typeof datum)[])) {
-        const searchKey = datum[key] as keyof TransposedValues<T, K>;
+      for (const key of (this.keys ?? Object.keys(datum) as (keyof typeof datum)[])) {
+        if (datum[key] === undefined) {
+          continue	
+        }
         
+        const searchKey = datum[key] as keyof TransposedValues<InferType<T, K>, K>;
+
         if (this._transposed[key] === undefined) {
-          this._transposed[key] = {[searchKey]: [datum]} as TransposedValues<T, K>
+          this._transposed[key] = { [searchKey]: [datum] } as TransposedValues<InferType<T, K>, K>
           continue
         }
 
