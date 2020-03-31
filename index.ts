@@ -54,9 +54,9 @@ export class OatyArray<T = never, K extends keyof T = never> {
     return this._transposed
   }
 
-  public get<SK extends K>(keyName: SK): TransposedValues<InferType<T, K>, SK>;
-  public get<SK extends K>(keyName: SK, keyValue: InferType<T, K>[SK]): InferType<T, K>[] | undefined;
-  public get<SK extends K>(keyName: SK, keyValue?: InferType<T, K>[SK]): TransposedValues<InferType<T, K>, SK> | InferType<T, K>[] | undefined {
+  public get<KN extends K>(keyName: KN): TransposedValues<InferType<T, K>, KN>;
+  public get<KN extends K>(keyName: KN, keyValue: InferType<T, K>[KN]): InferType<T, K>[] | undefined;
+  public get<KN extends K>(keyName: KN, keyValue?: InferType<T, K>[KN]): TransposedValues<InferType<T, K>, KN> | InferType<T, K>[] | undefined {
     if (this._transposed[keyName] === undefined) {
       throw new ReferenceError(`The key '${keyName}' has not been transposed`)
     }
@@ -65,7 +65,7 @@ export class OatyArray<T = never, K extends keyof T = never> {
       return this._transposed[keyName]
     }
 
-    return this._transposed[keyName][keyValue as keyof TransposedValues<InferType<T, K>, SK>]
+    return this._transposed[keyName][keyValue as keyof TransposedValues<InferType<T, K>, KN>]
   }
 
   public push(...data: readonly InferType<T, K>[]) {

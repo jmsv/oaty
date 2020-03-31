@@ -24,8 +24,8 @@ export declare class OatyArray<T = never, K extends keyof T = never> {
     get length(): number;
     get data(): InferType<T, K>[];
     get transposed(): Transposed<InferType<T, K>, K>;
-    get<SK extends K>(keyName: SK): TransposedValues<InferType<T, K>, SK>;
-    get<SK extends K>(keyName: SK, keyValue: InferType<T, K>[SK]): InferType<T, K>[] | undefined;
+    get<KN extends K>(keyName: KN): TransposedValues<InferType<T, K>, KN>;
+    get<KN extends K>(keyName: KN, keyValue: InferType<T, K>[KN]): InferType<T, K>[] | undefined;
     push(...data: readonly InferType<T, K>[]): number;
     private transpose;
 }
