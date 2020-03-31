@@ -38,3 +38,6 @@ expectType<{
 
 // Keys must be a subset of the available keys
 expectError(new OatyArray([{"a": 1, "b": 2}], {keys: ["f"]}))
+
+const myArray5 = new OatyArray([{ key1: "something", key3: "hello"}], { keys: ["key1"]})
+expectType<"key1"[]>(myArray5.keys)
