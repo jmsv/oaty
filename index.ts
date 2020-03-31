@@ -52,7 +52,10 @@ export class OatyArray<T = never, K extends keyof T = keyof T> {
 
   public get<KN extends K>(keyName: KN): TransposedValues<InferType<T, K>, KN>;
   public get<KN extends K>(keyName: KN, keyValue: InferType<T, K>[KN]): InferType<T, K>[] | undefined;
-  public get<KN extends K>(keyName: KN, keyValue?: InferType<T, K>[KN]): TransposedValues<InferType<T, K>, KN> | InferType<T, K>[] | undefined {
+  public get<KN extends K>(
+    keyName: KN, 
+    keyValue?: InferType<T, K>[KN]
+  ): TransposedValues<InferType<T, K>, KN> | InferType<T, K>[] | undefined {
     if (this._transposed[keyName] === undefined) {
       throw new ReferenceError(`The key '${keyName}' has not been transposed`)
     }
