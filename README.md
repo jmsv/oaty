@@ -135,6 +135,18 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 
 ### Changelog
 
+
+#### `1.0.0`
+
+- Added extra type inference and enforcement to Oaty, this means that an array can be initialised `new OatyArray([{ myKey: "myValue" }])` without needing to provide a type.
+- `keys` input is now enforced to a subset of the keys of the given type
+- `keys` input will now be used to enforce that only valid objects are transposed by Oaty
+- `.keys` will now always return either an array containing all the auto transposed keys, or an array of the configured keys, and is now type correct.
+- Oaty will now enforce the correct keys are the objects of `.push` meaning that an error will be thrown at compile time if an invalid object is being passed to Oaty.
+- Updated overloads on `.get` to return the correct types depending on usage
+- Updated to `typescript@3.8`
+- Added `tsd` tests
+
 #### `0.4.0`
 
 - Oaty can now be initialised with `new OatyArray<T>()` so that `.get` , `.data`, and `.transposed` return data of type `T`. This is completely optional as `T` defaults to `any`.
