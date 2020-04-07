@@ -91,7 +91,7 @@ Now, to get an array of fruit, rather than using `food.filter(f => f.type === 'f
 
 ---
 
-> __For data that changes frequently, this is a bad approach since transposing the data to use different key values is expensive.__
+> **For data that changes frequently, this is a bad approach since transposing the data to use different key values is expensive.**
 
 However, for data that is assigned once (e.g. when a server first starts running) or assigned relatively infrequently (e.g. polling a database) this idea should be far less CPU-intensive than frequently searching the array using `filter`, `find`, or manually.
 
@@ -100,12 +100,12 @@ However, for data that is assigned once (e.g. when a server first starts running
 This library's default export is `OatyArray`. Initialise it as such:
 
 ```javascript
-const oatyFood = new OatyArray(food, ['id', 'type'])
+const oatyFood = new OatyArray(food, { keys: ['id', 'type'] })
 ```
 
 In the above case, `food` is the initial array of items and `['id', 'type']` is the array of keys you want to be able to query.
 
-The `OatyArray` contstructor generates the transposed caches.
+The `OatyArray` constructor generates the transposed caches.
 
 To query data, use the `get` method:
 
@@ -117,8 +117,6 @@ The above is effectively the same as `foodByType['fruit']` in the above examples
 
 ## Development
 
-> Note that `oaty` is at a proof-of-concept stage and the API/implementation is subject to major changes until a v1 release, from which point versioning will be [semver](https://semver.org)
-
 `oaty` is built with Typescript
 
 To get started, run `npm install` to install dependencies.
@@ -128,13 +126,14 @@ To get started, run `npm install` to install dependencies.
 
 Feel free to open Issues/PRs with suggestions/problems/improvements.
 
+Library is versioned as-per the [semver](https://semver.org) standard.
+
 ### Maintainers
 
 - James Vickery - [jmsv](https://github.com/jmsv)
 - Jonathan Marsh - [j-m](https://github.com/j-m)
 
 ### Changelog
-
 
 #### `1.0.0`
 
@@ -163,7 +162,7 @@ Feel free to open Issues/PRs with suggestions/problems/improvements.
 - Made `keys` optional - will transpose every (root) key in an object
 - Added two options to change the return value for when they key or value of `.get()` is undefined
 - Renamed `original` to `data`
-- `.get()` can now retrieve all objects that have a key, like `.get('fruit')` 
+- `.get()` can now retrieve all objects that have a key, like `.get('fruit')`
 - Added simple benchmark
 - Added more tests
 

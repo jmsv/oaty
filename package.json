@@ -57,8 +57,8 @@
     "typescript": "3.8.3"
   },
   "tsd": {
-		"directory": "test"
-	},
+    "directory": "test"
+  },
   "nyc": {
     "extension": [
       ".ts"
