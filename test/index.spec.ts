@@ -32,10 +32,13 @@ describe('OatyArray', () => {
       it('initialises', () => {
         const initial = [
          { a: 1, b: 1, fruit: 'apple' },
-         { a: 1, b: 3, fruit: 'banana' }]
+         { a: 1, b: 3, fruit: 'banana' },
+         { a: 2, b: 4, food: 'yum' }
+        ]
         fixture.givenOatyArray(initial)
         fixture.thenOatyArrayExists()
         fixture.thenOriginalsEquals(initial)
+        fixture.thenKeysEquals(["a", "b", "fruit", "food"])
       })
     })
 
@@ -45,7 +48,7 @@ describe('OatyArray', () => {
         fixture.thenOatyArrayExists()
         fixture.thenKeysEquals(['a', 'b', 'fruit'])
       })
-    })
+    });
 
     context('([...], {keys})', () => {
       it('initialises', () => {
@@ -291,8 +294,8 @@ describe('OatyArray', () => {
     describe('.data', () => {
       context('initalised data', () => {
         it('returns data of type T[]', () => {
-          fixture.givenOatyArray<Dummy>([new Dummy()])
-          fixture.thenDataEquals<Dummy[]>([new Dummy()], 'Dummy')
+          fixture.givenOatyArray([new Dummy()])
+          fixture.thenDataEquals([new Dummy()], 'Dummy')
         })
       })
 
@@ -300,9 +303,9 @@ describe('OatyArray', () => {
     describe('.get', () => {
       describe('initialised data', () => {
         it('returns data of type T[]', () => {
-          fixture.givenOatyArray<Dummy>([new Dummy()])
+          fixture.givenOatyArray([new Dummy()])
           fixture.whenGetIsCalled('data', 'hello')
-          fixture.thenMatchesEquals<Dummy[]>([new Dummy()], 'Dummy')
+          fixture.thenMatchesEquals([new Dummy()], 'Dummy')
         })
       })
     })
@@ -310,8 +313,8 @@ describe('OatyArray', () => {
     describe('.transposed', () => {
       describe('initialised data', () => {
         it('returns data of type [T]', () => {
-          fixture.givenOatyArray<Dummy>([new Dummy()])
-          fixture.thenTransposedEquals<Dummy>({
+          fixture.givenOatyArray([new Dummy()])
+          fixture.thenTransposedEquals({
             data: {
               hello: [
                 new Dummy(),
@@ -326,13 +329,13 @@ describe('OatyArray', () => {
 
 // tslint:disable-next-line: max-classes-per-file
 class Fixture {
-  private _oatyArray: OatyArray | undefined
+  private _oatyArray: OatyArray<any, any> | undefined
 
   private _count: number | undefined
   private _matches: { [key: string]: [any] } | any[] | undefined
 
-  public givenOatyArray<T>(data?: T[], options?: Options) {
-    this._oatyArray = new OatyArray<T>(data, options)
+  public givenOatyArray(data?: any[], options?: Options<any>) {
+    this._oatyArray = new OatyArray(data, options)
   }
 
   public whenDataIsPushed(data: object[]) {
@@ -361,17 +364,17 @@ class Fixture {
     }
   }
 
-  public thenTransposedEquals<T>(transposed: Transposed<T>, type?: string) {
+  public thenTransposedEquals<T, K extends keyof T>(transposed: Transposed<T, K>, type?: string) {
     expect(this._oatyArray!.transposed).to.deep.equal(transposed)
     if (type === 'Dummy') {
-      expect(this._oatyArray!.transposed!.data!.hello![0]).to.be.an.instanceOf(Dummy)
+      expect((this._oatyArray!.transposed! as unknown as any).data!.hello![0]).to.be.an.instanceOf(Dummy)
     }
   }
 
   public thenMatchesEquals<T>(matches: T, type?: string) {
     expect(this._matches).to.deep.equal(matches)
     if (type === 'Dummy') {
-      expect(this._matches![0]).to.be.an.instanceOf(Dummy)
+      expect((this._matches as any)[0]).to.be.an.instanceOf(Dummy)
     }
   }
 

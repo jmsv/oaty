@@ -1,23 +1,32 @@
-export interface Options {
-    keys?: string[];
+export interface Options<K> {
+    keys?: K[];
 }
-export declare type Transposed<T> = {
-    [key: string]: {
-        [key: string]: [T];
-    };
+declare type TransposedValues<T, K extends keyof T> = {
+    [V in T[K] extends string | number | symbol ? T[K] : never]: T[] | undefined;
 };
-export declare class OatyArray<T = any> {
+export declare type Transposed<T, K extends keyof T> = {
+    [Key in keyof T]: TransposedValues<T, K>;
+};
+/**
+ * If T is not never, use T. Otherwise, infer the type from the keys K
+ */
+declare type InferType<T, K extends keyof any> = [T] extends [never] ? [K] extends [never] ? any : {
+    [Key in K]: any;
+} & {
+    [Key in string | number | symbol]: any;
+} : T;
+export declare class OatyArray<T = never, K extends keyof T = keyof T> {
+    private _transposed;
     private _data;
     private _options;
-    private _transposed;
-    constructor(_data?: T[], _options?: Options);
-    readonly keys: string[] | undefined;
-    readonly length: number;
-    readonly data: T[];
-    readonly transposed: Transposed<T>;
-    get(keyName: string, keyValue?: string): {
-        [key: string]: [T];
-    } | T[] | undefined;
-    push(...data: T[]): number;
+    constructor(data?: readonly InferType<T, K>[], options?: Options<K>);
+    get keys(): K[];
+    get length(): number;
+    get data(): InferType<T, K>[];
+    get transposed(): Transposed<InferType<T, K>, K>;
+    get<KN extends K>(keyName: KN): TransposedValues<InferType<T, K>, KN>;
+    get<KN extends K>(keyName: KN, keyValue: InferType<T, K>[KN]): InferType<T, K>[] | undefined;
+    push(...data: readonly InferType<T, K>[]): number;
     private transpose;
 }
+export {};

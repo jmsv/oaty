@@ -7,7 +7,7 @@ const testArray = [{ a: 1, b: 1, fruit: 'apple' },
 const results: any[] = []
 
 function time(runs: number) {
-  const oaty = new OatyArray({data: testArray})
+  const oaty = new OatyArray(testArray)
 
   const oatyTimes: number[] = []
   const oatyResults = []

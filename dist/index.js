@@ -1,17 +1,25 @@
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var OatyArray = /** @class */ (function () {
-    function OatyArray(_data, _options) {
-        if (_data === void 0) { _data = []; }
-        if (_options === void 0) { _options = {}; }
-        this._data = _data;
-        this._options = _options;
+    function OatyArray(data, options) {
+        if (data === void 0) { data = []; }
+        if (options === void 0) { options = {}; }
         this._transposed = {};
-        this.transpose(_data);
+        this._data = __spreadArrays(data);
+        this._options = options;
+        this.transpose(this._data);
     }
     Object.defineProperty(OatyArray.prototype, "keys", {
         get: function () {
-            return this._options.keys;
+            var _a;
+            return ((_a = this._options.keys) !== null && _a !== void 0 ? _a : Object.keys(this._transposed));
         },
         enumerable: true,
         configurable: true
@@ -57,22 +65,24 @@ var OatyArray = /** @class */ (function () {
     };
     OatyArray.prototype.transpose = function (data) {
         var _a;
+        var _b;
         for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
             var datum = data_1[_i];
-            for (var _b = 0, _c = (this.keys || Object.keys(datum)); _b < _c.length; _b++) {
-                var key = _c[_b];
+            for (var _c = 0, _d = ((_b = this._options.keys) !== null && _b !== void 0 ? _b : Object.keys(datum)); _c < _d.length; _c++) {
+                var key = _d[_c];
                 if (datum[key] === undefined) {
                     continue;
                 }
+                var searchKey = datum[key];
                 if (this._transposed[key] === undefined) {
-                    this._transposed[key] = (_a = {}, _a[datum[key]] = [datum], _a);
+                    this._transposed[key] = (_a = {}, _a[searchKey] = [datum], _a);
                     continue;
                 }
-                if (this._transposed[key][datum[key]] === undefined) {
-                    this._transposed[key][datum[key]] = [datum];
+                if (this._transposed[key][searchKey] === undefined) {
+                    this._transposed[key][searchKey] = [datum];
                     continue;
                 }
-                this._transposed[key][datum[key]].push(datum);
+                this._transposed[key][searchKey].push(datum);
             }
         }
     };
