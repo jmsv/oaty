@@ -8,5 +8,6 @@
     "noImplicitAny": true,
     "lib": ["es2015", "es2017", "dom"]
   },
+  "include": ["index.ts"],
   "exclude": ["./test/**", "./benchmark/**"]
 }
