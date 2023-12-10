@@ -11,7 +11,7 @@
     "build": "npm run clean && tsc",
     "test": "mocha --require ts-node/register test/**/*.spec.ts --reporter list",
     "test-d": "npm run build && tsd",
-    "format": "tslint --project . --fix",
+    "format": "prettier --write \"**/*.{ts,md,yml,json}\"",
     "ci": "npm run coverage && npm run test-d",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm run ci",
@@ -50,10 +50,10 @@
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
+    "prettier": "^3.1.1",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
     "tsd": "^0.11.0",
-    "tslint": "^5.20.0",
     "typescript": "3.8.3"
   },
   "tsd": {
