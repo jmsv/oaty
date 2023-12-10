@@ -4,6 +4,9 @@
   "description": "Object Array Transposer(y) - JS objects with multiple key/value structures",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "clean": "rimraf dist",
     "coverage": "nyc npm run test",
